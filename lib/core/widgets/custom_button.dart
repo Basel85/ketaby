@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 class CustomButton extends StatelessWidget {
   final String text;
   final void Function() onTap;
-  const CustomButton({super.key, required this.text, required this.onTap});
+  final bool mustBeBold;
+  const CustomButton(
+      {super.key,
+      required this.text,
+      required this.onTap,
+      this.mustBeBold = true});
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +22,10 @@ class CustomButton extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Text(
           text,
-          style: const TextStyle(
-              fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18),
+          style: TextStyle(
+              fontWeight: mustBeBold ? FontWeight.bold : FontWeight.w300,
+              color: Colors.white,
+              fontSize: 18),
         ),
       ),
     );

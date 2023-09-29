@@ -1,5 +1,5 @@
 class EndPoints {
-  static String baseUrl = 'https://vcare.integration25.com/api';
-  static String registerEndpoint = '/auth/register';
-
+  static const String baseUrl = 'https://codingarabic.online/api';
+  static const String registerEndpoint = '/register';
+  static const String loginEndPoint = '/login';
 }

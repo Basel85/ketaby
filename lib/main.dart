@@ -4,6 +4,7 @@ import 'package:ketaby/core/cubits/password_visibility/password_visibility_cubit
 import 'package:ketaby/core/observer.dart';
 import 'package:ketaby/features/login/presentation/cubits/login/login_cubit.dart';
 import 'package:ketaby/features/login/presentation/views/login_screen.dart';
+import 'package:ketaby/features/register/presentation/cubits/register_cubit/register_cubit.dart';
 import 'package:ketaby/features/register/presentation/views/register_screen.dart';
 
 void main() {
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<LoginCubit>(
           create: (context) => LoginCubit(),
         ),
+        BlocProvider<RegisterCubit>(create: (context) => RegisterCubit()),
         BlocProvider<PasswordVisibilityCubit>(
             create: (context) => PasswordVisibilityCubit()),
         // BlocProvider<RegisterCubit>(

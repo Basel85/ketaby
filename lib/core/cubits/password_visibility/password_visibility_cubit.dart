@@ -6,7 +6,7 @@ class PasswordVisibilityCubit extends Cubit<PasswordVisibilityStates> {
 
   static PasswordVisibilityCubit get(context) => BlocProvider.of(context);
 
-  void changePasswordVisibility({required int index}) {
-    emit(PasswordVisibilityChangeState(index: index));
+  void changePasswordVisibility() {
+    emit(PasswordVisibilityChangeState());
   }
 }

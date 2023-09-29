@@ -26,7 +26,7 @@ class Api {
   static Future<dynamic> post(
       {required String url,
       @required dynamic body,
-      @required String? token}) async {
+      String? token}) async {
     Map<String, String> headers = {};
     // headers.addAll({
     //   'Content-Type': 'application/json',

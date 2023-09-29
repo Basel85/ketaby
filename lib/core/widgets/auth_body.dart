@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ketaby/core/cubits/password_visibility/password_visibility_cubit.dart';
@@ -5,19 +6,39 @@ import 'package:ketaby/core/cubits/password_visibility/password_visibility_state
 import 'package:ketaby/core/widgets/custom_button.dart';
 import 'package:ketaby/core/widgets/custom_text_form_field.dart';
 import 'package:ketaby/features/login/presentation/cubits/login/login_cubit.dart';
+import 'package:ketaby/features/login/presentation/views/login_screen.dart';
+import 'package:ketaby/features/register/presentation/cubits/register_cubit/register_cubit.dart';
+import 'package:ketaby/features/register/presentation/views/register_screen.dart';
 
 class AuthBody extends StatefulWidget {
   final bool isThisLoginScreen;
-  const AuthBody({super.key, this.isThisLoginScreen = true});
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final TextEditingController? nameController;
+  final TextEditingController? passwordConfirmController;
+  const AuthBody(
+      {super.key,
+      this.isThisLoginScreen = true,
+      required this.emailController,
+      required this.passwordController,
+      this.nameController,
+      this.passwordConfirmController});
 
   @override
   State<AuthBody> createState() => _AuthBodyState();
 }
 
 class _AuthBodyState extends State<AuthBody> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
   bool _obscureText = true;
+  @override
+  void dispose() {
+    widget.emailController.dispose();
+    widget.passwordController.dispose();
+    widget.nameController?.dispose();
+    widget.passwordConfirmController?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -27,7 +48,7 @@ class _AuthBodyState extends State<AuthBody> {
           child: Column(
             children: [
               Text(
-                widget.title,
+                widget.isThisLoginScreen ? "Login now!" : "Join Us!",
                 style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -39,14 +60,23 @@ class _AuthBodyState extends State<AuthBody> {
               SizedBox(
                 width: double.infinity,
                 child: Text.rich(TextSpan(children: [
-                  const TextSpan(
-                      text: "Don't have an account? ",
-                      style: TextStyle(color: Colors.grey)),
                   TextSpan(
-                    text: "Register Now!",
+                      text: widget.isThisLoginScreen
+                          ? "Don't have an account? "
+                          : "already have an account? ",
+                      style: const TextStyle(color: Colors.grey)),
+                  TextSpan(
+                    text: widget.isThisLoginScreen ? "Register Now!" : "Login",
                     style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Navigator.of(context).pushReplacementNamed(
+                            widget.isThisLoginScreen
+                                ? RegisterScreen.id
+                                : LoginScreen.id);
+                      },
                   )
                 ])),
               ),
@@ -61,8 +91,17 @@ class _AuthBodyState extends State<AuthBody> {
                         color: Theme.of(context).primaryColor, width: 2)),
                 child: Column(
                   children: [
+                    if (!widget.isThisLoginScreen) ...[
+                      CustomTextFormField(
+                          controller: widget.nameController!,
+                          text: "Name",
+                          icon: Icons.person),
+                    ],
+                    const SizedBox(
+                      height: 20,
+                    ),
                     CustomTextFormField(
-                        controller: _emailController,
+                        controller: widget.emailController,
                         text: "Email",
                         icon: Icons.email),
                     const SizedBox(
@@ -70,11 +109,8 @@ class _AuthBodyState extends State<AuthBody> {
                     ),
                     BlocBuilder<PasswordVisibilityCubit,
                         PasswordVisibilityStates>(
-                      buildWhen: (previous, current) =>
-                          current is PasswordVisibilityChangeState &&
-                          current.index == 0,
                       builder: (_, state) => CustomTextFormField(
-                          controller: _passwordController,
+                          controller: widget.passwordController,
                           text: "Password",
                           obscureText: _obscureText,
                           suffixIcon: IconButton(
@@ -84,7 +120,7 @@ class _AuthBodyState extends State<AuthBody> {
                             onPressed: () {
                               _obscureText = !_obscureText;
                               PasswordVisibilityCubit.get(context)
-                                  .changePasswordVisibility(index: 0);
+                                  .changePasswordVisibility();
                             },
                           ),
                           icon: Icons.lock),
@@ -92,12 +128,30 @@ class _AuthBodyState extends State<AuthBody> {
                     const SizedBox(
                       height: 20,
                     ),
+                    if (!widget.isThisLoginScreen) ...[
+                      CustomTextFormField(
+                          controller: widget.passwordConfirmController!,
+                          text: "Confirm Password",
+                          obscureText: true,
+                          icon: Icons.lock),
+                    ],
+                    const SizedBox(
+                      height: 20,
+                    ),
                     CustomButton(
-                        text: "Login",
+                        text: widget.isThisLoginScreen ? "Login" : "Register",
+                        mustBeBold: widget.isThisLoginScreen,
                         onTap: () {
-                          LoginCubit.get(context).login(
-                              email: _emailController.text,
-                              password: _passwordController.text);
+                          widget.isThisLoginScreen
+                              ? LoginCubit.get(context).login(
+                                  email: widget.emailController.text,
+                                  password: widget.passwordController.text)
+                              : RegisterCubit.get(context).register(
+                                  email: widget.emailController.text,
+                                  password: widget.passwordController.text,
+                                  name: widget.nameController!.text,
+                                  passwordConfirm:
+                                      widget.passwordConfirmController!.text);
                         }),
                   ],
                 ),
