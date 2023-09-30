@@ -1,13 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ketaby/core/cubits/auth/auth_cubit.dart';
+import 'package:ketaby/core/cubits/auth/auth_states.dart';
 import 'package:ketaby/core/cubits/password_visibility/password_visibility_cubit.dart';
 import 'package:ketaby/core/cubits/password_visibility/password_visibility_states.dart';
 import 'package:ketaby/core/widgets/custom_button.dart';
 import 'package:ketaby/core/widgets/custom_text_form_field.dart';
-import 'package:ketaby/features/login/presentation/cubits/login/login_cubit.dart';
 import 'package:ketaby/features/login/presentation/views/login_screen.dart';
-import 'package:ketaby/features/register/presentation/cubits/register_cubit/register_cubit.dart';
 import 'package:ketaby/features/register/presentation/views/register_screen.dart';
 
 class AuthBody extends StatefulWidget {
@@ -96,6 +96,18 @@ class _AuthBodyState extends State<AuthBody> {
                           controller: widget.nameController!,
                           text: "Name",
                           icon: Icons.person),
+                      BlocBuilder<AuthCubit, AuthStates>(
+                        buildWhen: (_, current) =>
+                            current is AuthLoadingState ||
+                            (current is AuthErrorState &&
+                                current.errors.containsKey('name')),
+                        builder: (_, state) => Text(
+                          state is AuthErrorState
+                              ? state.errors['name']![0]
+                              : '',
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      )
                     ],
                     const SizedBox(
                       height: 20,
@@ -104,6 +116,18 @@ class _AuthBodyState extends State<AuthBody> {
                         controller: widget.emailController,
                         text: "Email",
                         icon: Icons.email),
+                    BlocBuilder<AuthCubit, AuthStates>( 
+                      buildWhen: (_, current) =>
+                          current is AuthLoadingState ||
+                          (current is AuthErrorState &&
+                              current.errors.containsKey('email')),
+                      builder: (_, state) => Text(
+                        state is AuthErrorState
+                            ? state.errors['email']![0]
+                            : '',
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -125,6 +149,18 @@ class _AuthBodyState extends State<AuthBody> {
                           ),
                           icon: Icons.lock),
                     ),
+                    BlocBuilder<AuthCubit, AuthStates>(
+                      buildWhen: (_, current) =>
+                          current is AuthLoadingState ||
+                          (current is AuthErrorState &&
+                              current.errors.containsKey('password')),
+                      builder: (_, state) => Text(
+                        state is AuthErrorState
+                            ? state.errors['password']![0]
+                            : '',
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -143,10 +179,10 @@ class _AuthBodyState extends State<AuthBody> {
                         mustBeBold: widget.isThisLoginScreen,
                         onTap: () {
                           widget.isThisLoginScreen
-                              ? LoginCubit.get(context).login(
+                              ? AuthCubit.get(context).login(
                                   email: widget.emailController.text,
                                   password: widget.passwordController.text)
-                              : RegisterCubit.get(context).register(
+                              : AuthCubit.get(context).register(
                                   email: widget.emailController.text,
                                   password: widget.passwordController.text,
                                   name: widget.nameController!.text,

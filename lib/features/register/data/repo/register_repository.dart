@@ -4,15 +4,21 @@ import 'package:ketaby/core/helpers/cache_helper.dart';
 import 'package:ketaby/core/utils/endpoints.dart';
 import 'package:ketaby/core/utils/exceptions.dart';
 
-class LoginRepository {
+class RegisterRepository {
   static final CacheHelper _cacheHelper = SecureStorageHelper();
   static late UserModel _user;
-  static Future<UserModel> login({required String email, required String password}) async {
-    final data =  await Api.post(
-        url: EndPoints.baseUrl + EndPoints.loginEndPoint,
+  static Future<UserModel> register(
+      {required String email,
+      required String password,
+      required String name,
+      required String passwordConfirm}) async {
+    final data = await Api.post(
+        url: EndPoints.baseUrl + EndPoints.registerEndpoint,
         body: {
+          'name': name,
           'email': email,
           'password': password,
+          'password_confirmation': passwordConfirm
         });
     if (data['status'] == 442) {
       throw AuthException(
@@ -21,7 +27,8 @@ class LoginRepository {
     } else if (data['status'] == 201) {
       _user = UserModel.fromJson(data['data']['user']);
       await _cacheHelper.setData(key: 'token', value: data['data']['token']);
-      await _cacheHelper.setData(key: 'user', value: _user.toJson(user: _user).toString());
+      await _cacheHelper.setData(
+          key: 'user', value: _user.toJson(user: _user).toString());
     }
     return _user;
   }

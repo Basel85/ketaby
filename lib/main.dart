@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ketaby/core/cubits/auth/auth_cubit.dart';
 import 'package:ketaby/core/cubits/password_visibility/password_visibility_cubit.dart';
+import 'package:ketaby/core/helpers/cache_helper.dart';
 import 'package:ketaby/core/observer.dart';
-import 'package:ketaby/features/login/presentation/cubits/login/login_cubit.dart';
+import 'package:ketaby/features/home/presentation/cubits/get_sliders/get_sliders_cubit.dart';
+import 'package:ketaby/features/home/presentation/views/home_screen.dart';
 import 'package:ketaby/features/login/presentation/views/login_screen.dart';
-import 'package:ketaby/features/register/presentation/cubits/register_cubit/register_cubit.dart';
 import 'package:ketaby/features/register/presentation/views/register_screen.dart';
 
-void main() {
+Map<String, dynamic>? _user;
+final CacheHelper _cacheHelper = SecureStorageHelper();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = Observer();
+  _user = await _cacheHelper.getData(key: 'user');
   runApp(const MyApp());
 }
 
@@ -19,15 +25,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<LoginCubit>(
-          create: (context) => LoginCubit(),
+        BlocProvider<AuthCubit>(
+          create: (context) => AuthCubit(),
         ),
-        BlocProvider<RegisterCubit>(create: (context) => RegisterCubit()),
         BlocProvider<PasswordVisibilityCubit>(
             create: (context) => PasswordVisibilityCubit()),
-        // BlocProvider<RegisterCubit>(
-        //   create: (context) => RegisterCubit(),
-        // ),
+        BlocProvider<GetSlidersCubit>(create: (context) => GetSlidersCubit())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -36,10 +39,13 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF05A4A6)),
           useMaterial3: true,
         ),
-        initialRoute: LoginScreen.id,
+        initialRoute: _user != null ? HomeScreen.id : LoginScreen.id,
         routes: {
-          LoginScreen.id: (context) => const LoginScreen(),
-          RegisterScreen.id: (context) => const RegisterScreen(),
+          LoginScreen.id: (_) => const LoginScreen(),
+          RegisterScreen.id: (_) => const RegisterScreen(),
+          HomeScreen.id: (_) => HomeScreen(
+                user: _user,
+              ),
         },
       ),
     );

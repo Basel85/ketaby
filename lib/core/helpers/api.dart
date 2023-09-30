@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class Api {
-  static Future<dynamic> get({required String url, @required String? token}) async {
+  static Future<dynamic> get(
+      {required String url, String? token}) async {
     Map<String, String> headers = {};
     // headers.addAll({
     //   'Content-Type': 'application/json',
@@ -15,7 +15,7 @@ class Api {
       });
     }
     http.Response response = await http.get(Uri.parse(url), headers: headers);
-    if (response.statusCode >= 200||response.statusCode<300) {
+    if (response.statusCode >= 200 || response.statusCode < 300) {
       return jsonDecode(response.body);
     } else {
       throw Exception(
@@ -24,9 +24,7 @@ class Api {
   }
 
   static Future<dynamic> post(
-      {required String url,
-      @required dynamic body,
-      String? token}) async {
+      {required String url, @required dynamic body, String? token}) async {
     Map<String, String> headers = {};
     // headers.addAll({
     //   'Content-Type': 'application/json',
@@ -38,25 +36,17 @@ class Api {
       });
     }
     http.Response response;
-    try{
-       response= await http.post(
+    try {
+      response = await http.post(
         Uri.parse(url),
         body: body,
         headers: headers,
       );
-       if (response.statusCode >= 200&&response.statusCode<300) {
-         Map<String, dynamic> data = jsonDecode(response.body);
-         return data;
-       } else {
-         print(response.body);
-         throw Exception(
-             response.reasonPhrase.toString());
-       }
-    }catch(e){
+      Map<String, dynamic> data = jsonDecode(response.body);
+      return data;
+    } catch (e) {
       throw Exception(e.toString());
     }
-
-
   }
 
   static Future<dynamic> put(
@@ -90,8 +80,8 @@ class Api {
 
   static Future<dynamic> delete(
       {required String url,
-        @required dynamic body,
-        @required String? token}) async {
+      @required dynamic body,
+      @required String? token}) async {
     Map<String, String> headers = {};
     // headers.addAll({
     //   'Content-Type': 'application/json',
@@ -108,17 +98,14 @@ class Api {
       body: body,
       headers: headers,
     );
-    if (response.statusCode >= 200&&response.statusCode<300) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       Map<String, dynamic> data = jsonDecode(response.body);
       return data;
     } else {
       if (kDebugMode) {
         print(response.body);
       }
-      throw Exception(
-          response.reasonPhrase.toString());
+      throw Exception(response.reasonPhrase.toString());
     }
   }
-
-
 }
