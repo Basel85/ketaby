@@ -24,7 +24,7 @@ class RegisterRepository {
       throw AuthException(
           errorMessage: data['message'] as String,
           errors: data['errors'] as Map<String, dynamic>);
-    } else if (data['status'] == 201) {
+    } else if (data['status'] == 201 || data['status'] == 200) {
       _user = UserModel.fromJson(data['data']['user']);
       await _cacheHelper.setData(key: 'token', value: data['data']['token']);
       await _cacheHelper.setData(

@@ -13,12 +13,12 @@ class GetSlidersCubit extends Cubit<GetSlidersStates> {
     try {
       emit(GetSlidersLoadingState());
       final sliders = await GetSlidersRepository.getSliders();
+      print("ayy");
       emit(GetSlidersSuccessState(sliders: sliders));
-    } on SocketException {
+    } on SocketException catch (_) {
       emit(GetSlidersErrorState(errorMessage: "No Internet Connection"));
-    } 
-    catch (_) {
-      emit(GetSlidersErrorState(errorMessage: "Something went wrong"));
+    } catch (e) {
+      emit(GetSlidersErrorState(errorMessage: e.toString()));
     }
   }
 }

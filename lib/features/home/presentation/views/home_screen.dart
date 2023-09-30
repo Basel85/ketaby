@@ -62,12 +62,18 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BlocBuilder<GetSlidersCubit, GetSlidersStates>(builder: (_, state) {
             if (state is GetSlidersSuccessState) {
-              return PageView.builder(
-                itemBuilder: (_, index) => Image.network(
-                  state.sliders[index]['image']!,
-                  fit: BoxFit.cover,
+              return SizedBox(
+                height: 300,
+                child: PageView.builder(
+                  itemBuilder: (_, index) => SizedBox(
+                    height: 300,
+                    child: Image.network(
+                      state.sliders[index]['image'].toString(),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  itemCount: state.sliders.length,
                 ),
-                itemCount: state.sliders.length,
               );
             } else if (state is GetSlidersErrorState) {
               return GetErrorMessage(

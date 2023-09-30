@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ketaby/core/cubits/auth/auth_cubit.dart';
@@ -14,7 +16,11 @@ final CacheHelper _cacheHelper = SecureStorageHelper();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = Observer();
-  _user = await _cacheHelper.getData(key: 'user');
+  String? userBody = await _cacheHelper.getData(key: 'user');
+  if (userBody != null) {
+       _user = jsonDecode(userBody);
+  }
+ 
   runApp(const MyApp());
 }
 
@@ -39,7 +45,9 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF05A4A6)),
           useMaterial3: true,
         ),
-        initialRoute: _user != null ? HomeScreen.id : LoginScreen.id,
+        initialRoute: _cacheHelper.getData(key: 'token') != null
+            ? HomeScreen.id
+            : LoginScreen.id,
         routes: {
           LoginScreen.id: (_) => const LoginScreen(),
           RegisterScreen.id: (_) => const RegisterScreen(),

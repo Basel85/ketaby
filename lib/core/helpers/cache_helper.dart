@@ -6,7 +6,7 @@ abstract class CacheHelper {
     required dynamic value,
   });
 
-  dynamic getData({
+   getData({
     required String key,
   });
 
@@ -24,7 +24,7 @@ class SecureStorageHelper extends CacheHelper {
   }
 
   @override
-  getData({required String key}) {
+   getData({required String key}) {
     return storage.read(key: key);
   }
 

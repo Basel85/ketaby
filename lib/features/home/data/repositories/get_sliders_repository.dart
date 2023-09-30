@@ -5,6 +5,11 @@ class GetSlidersRepository {
   static Future<List<Map<String, String>>> getSliders() async {
     final data =
         await Api.get(url: EndPoints.baseUrl + EndPoints.getSlidersEndPoint);
-    return data['data']['sliders'];
+    print(data['data']['sliders']);
+    print("sUUII");
+    return data['data']['sliders']
+        .map((slider) => slider)
+        .toList()
+        .cast<Map<String, String>>();
   }
 }
