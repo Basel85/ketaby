@@ -6,4 +6,5 @@ class EndPoints {
   static const String bestSellerEndPoint = "/products-bestseller";
   static const String newArrivalsEndPoint = "/products-new-arrivals";
   static const String categoriesEndPoint = "/categories";
+  static const String booksEndPoint = "/products";
 }

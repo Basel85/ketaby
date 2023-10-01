@@ -6,6 +6,7 @@ import 'package:ketaby/core/cubits/auth/auth_cubit.dart';
 import 'package:ketaby/core/cubits/password_visibility/password_visibility_cubit.dart';
 import 'package:ketaby/core/helpers/cache_helper.dart';
 import 'package:ketaby/core/observer.dart';
+import 'package:ketaby/features/books/presentation/cubits/get_all_books/get_all_books_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/bottom_navigation_bar/bottom_navigation_bar_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/get_best_seller/get_best_seller_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/get_categories/get_categories_cubit.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
             create: (context) => GetNewArrivalsCubit()),
         BlocProvider<GetCategoriesCubit>(create: (context) => GetCategoriesCubit()),
         BlocProvider<BottomNavigationBarCubit>(create: (context) => BottomNavigationBarCubit()),
+        BlocProvider<GetAllBooksCubit>(create: (context) => GetAllBooksCubit())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -55,10 +57,9 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF05A4A6)),
           useMaterial3: true,
         ),
-        initialRoute: LoginScreen.id,
-        // initialRoute: _cacheHelper.getData(key: 'token') != null
-        //     ? HomeScreen.id
-        //     : LoginScreen.id,
+        initialRoute: _cacheHelper.getData(key: 'token') != null
+            ? HomeScreen.id
+            : LoginScreen.id,
         routes: {
           LoginScreen.id: (_) => const LoginScreen(),
           RegisterScreen.id: (_) => const RegisterScreen(),

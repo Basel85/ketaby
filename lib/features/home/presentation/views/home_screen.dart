@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ketaby/features/books/presentation/views/books_body.dart';
 import 'package:ketaby/features/home/presentation/cubits/bottom_navigation_bar/bottom_navigation_bar_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/bottom_navigation_bar/bottom_navigation_bar_states.dart';
 import 'package:ketaby/features/home/presentation/cubits/get_best_seller/get_best_seller_cubit.dart';
@@ -23,6 +24,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   initState() {
     super.initState();
+    try {
+      user = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    } catch (_) {
+      user = widget.user!;
+    }
     GetSlidersCubit.get(context).getSliders();
     GetBestSellerCubit.get(context).getBestSeller();
     GetNewArrivalsCubit.get(context).getNewArrivals();
@@ -30,132 +36,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    try {
-      user = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    } catch (_) {
-      user = widget.user!;
-    }
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 100,
-        elevation: 0,
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            "Hi, ${user['name']}",
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const Text(
-            "What are you reading today?",
-            style: TextStyle(color: Colors.grey, fontSize: 15),
-          )
-        ]),
-        actions: [
-          CircleAvatar(
-            radius: 25,
-            backgroundImage: NetworkImage(user['image']),
-          ),
-          const SizedBox(
-            width: 18,
-          ),
-        ],
-      ),
-      drawer: Drawer(
-        child: Column(
-          children: [
-            UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-              ),
-              accountName: Text(
-                user['name'],
-                style: const TextStyle(color: Colors.white),
-              ),
-              accountEmail: Text(
-                user['email'],
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.w300),
-              ),
-              currentAccountPicture: CircleAvatar(
-                radius: 25,
-                backgroundImage: NetworkImage(user['image']),
-              ),
-            ),
-            Expanded(
-                child: ListView(
-              children: const [
-                ListTile(
-                  leading: Icon(
-                    Icons.history_edu,
-                    color: Colors.grey,
-                  ),
-                  title: Text(
-                    "Order History",
-                    style: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.edit,
-                    color: Colors.grey,
-                  ),
-                  title: Text(
-                    "Edit Profile",
-                    style: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.change_circle,
-                    color: Colors.grey,
-                  ),
-                  title: Text(
-                    "Change Password",
-                    style: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.logout,
-                    color: Colors.red,
-                  ),
-                  title: Text(
-                    "Logout",
-                    style: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ))
-          ],
-        ),
-      ),
       body: BlocBuilder<BottomNavigationBarCubit, BottomNavigationBarStates>(
         builder: (_, __) => IndexedStack(
           index: _currentIndex,
-          children: const [
-            HomeBody(),
-            Text("bookmark"),
-            Text("favourite"),
-            Text("cart"),
-            Text("profile"),
+          children: [
+            HomeBody(
+              user: user,
+            ),
+            const BooksBody(),
+            const Text("favourite"),
+            const Text("cart"),
+            const Text("profile"),
           ],
         ),
       ),

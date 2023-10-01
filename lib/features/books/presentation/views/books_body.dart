@@ -1,0 +1,103 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ketaby/core/widgets/get_error_message.dart';
+import 'package:ketaby/features/books/presentation/cubits/get_all_books/get_all_books_cubit.dart';
+import 'package:ketaby/features/books/presentation/cubits/get_all_books/get_all_books_states.dart';
+import 'package:ketaby/features/books/presentation/views/widgets/book_component_books_tap.dart';
+import 'package:shimmer/shimmer.dart';
+
+class BooksBody extends StatefulWidget {
+  const BooksBody({super.key});
+
+  @override
+  State<BooksBody> createState() => _BooksBodyState();
+}
+
+class _BooksBodyState extends State<BooksBody> {
+  final TextEditingController _searchController = TextEditingController();
+  @override
+  void initState() {
+    GetAllBooksCubit.get(context).getAllBooks();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: Padding(
+      padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+      child: Column(
+        children: [
+          SearchBar(
+            controller: _searchController,
+            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15))),
+            hintText: "Search",
+            padding: MaterialStateProperty.all(
+                const EdgeInsets.symmetric(horizontal: 15)),
+            backgroundColor: MaterialStateProperty.all(Colors.grey[200]),
+            elevation: MaterialStateProperty.all(0),
+            leading: const Icon(
+              Icons.search,
+              color: Colors.black,
+            ),
+            hintStyle: MaterialStateProperty.all(const TextStyle(
+                color: Colors.grey, fontWeight: FontWeight.bold)),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Expanded(
+            child: BlocBuilder<GetAllBooksCubit, GetAllBooksStates>(
+              builder: (context, state) {
+                if (state is GetAllBooksSuccessState) {
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      GetAllBooksCubit.get(context).getAllBooks();
+                    },
+                    child: ListView.separated(
+                        itemBuilder: (context, index) => BookComponentBooksTap(
+                              book:
+                                  state.books[index].toJson(state.books[index]),
+                            ),
+                        separatorBuilder: (context, index) => const SizedBox(
+                              height: 10,
+                            ),
+                        itemCount: state.books.length),
+                  );
+                } else if (state is GetAllBooksErrorState) {
+                  return GetErrorMessage(
+                      errorMessage: state.errorMessage,
+                      onPressed: () =>
+                          GetAllBooksCubit.get(context).getAllBooks());
+                } else {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.black12,
+                    highlightColor: Colors.white,
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 4.0),
+                        ),
+                        Text(
+                          'Slide to unlock',
+                          style: TextStyle(
+                            fontSize: 28.0,
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                  // return const Center(
+                  //   child: CircularProgressIndicator.adaptive(),
+                  // );
+                }
+              },
+            ),
+          )
+        ],
+      ),
+    ));
+  }
+}

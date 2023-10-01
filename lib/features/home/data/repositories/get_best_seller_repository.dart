@@ -1,6 +1,6 @@
 import 'package:ketaby/core/helpers/api.dart';
 import 'package:ketaby/core/utils/endpoints.dart';
-import 'package:ketaby/features/home/data/models/book_model.dart';
+import 'package:ketaby/core/data/models/book_model.dart';
 
 class GetBestSellerRepository {
   static Future<List<BookModel>> getBestSeller() async {

@@ -1,4 +1,4 @@
-import 'package:ketaby/features/home/data/models/book_model.dart';
+import 'package:ketaby/core/data/models/book_model.dart';
 
 abstract class GetBestSellerStates {}
 class GetBestSellerInitialState extends GetBestSellerStates {}

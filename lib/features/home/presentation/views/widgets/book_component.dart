@@ -25,6 +25,7 @@ class BookComponent extends StatelessWidget {
           Stack(
             children: [
               Container(
+                height: 130,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: const [
@@ -33,6 +34,9 @@ class BookComponent extends StatelessWidget {
                           blurRadius: 2,
                           offset: Offset(0, 2))
                     ]),
+              ),
+              SizedBox(
+                height: 130,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.network(

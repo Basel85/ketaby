@@ -28,7 +28,7 @@ class BookModel {
         description: json['description'],
         price: json['price'],
         discount: json['discount'],
-        priceAfterDiscount: json['price_after_discount'],
+        priceAfterDiscount: json['price_after_discount'].toDouble(),
         stock: json['stock'],
         bestSeller: json['best_seller'],
         image: json['image'],
@@ -38,6 +38,7 @@ class BookModel {
     return {
       "id": bookModel.id,
       "name": bookModel.name,
+      "price": bookModel.price,
       "description": bookModel.description,
       "discount": bookModel.discount,
       "price_after_discount": bookModel.priceAfterDiscount,
