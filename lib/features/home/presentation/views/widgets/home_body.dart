@@ -13,7 +13,7 @@ import 'package:ketaby/features/home/presentation/views/widgets/book_component.d
 import 'package:ketaby/features/home/presentation/views/widgets/category_component.dart';
 import 'package:ketaby/features/home/presentation/views/widgets/section_component.dart';
 
-class HomeBody extends StatefulWidget  {
+class HomeBody extends StatefulWidget {
   final Map<String, dynamic> user;
   const HomeBody({super.key, required this.user});
 
@@ -21,7 +21,8 @@ class HomeBody extends StatefulWidget  {
   State<HomeBody> createState() => _HomeBodyState();
 }
 
-class _HomeBodyState extends State<HomeBody> with AutomaticKeepAliveClientMixin {
+class _HomeBodyState extends State<HomeBody>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -183,13 +184,8 @@ class _HomeBodyState extends State<HomeBody> with AutomaticKeepAliveClientMixin 
                       itemBuilder: (_, index) => Container(
                         margin: const EdgeInsets.only(right: 10),
                         child: BookComponent(
-                          bookName: state.bestSellerBooks[index].name,
-                          bookCategory: state.bestSellerBooks[index].category,
-                          discount: state.bestSellerBooks[index].discount,
-                          imageUrl: state.bestSellerBooks[index].image,
-                          price: state.bestSellerBooks[index].price,
-                          priceAfterDiscount:
-                              state.bestSellerBooks[index].priceAfterDiscount,
+                          book: state.bestSellerBooks[index]
+                              .toJson(state.bestSellerBooks[index]),
                         ),
                       ),
                       itemCount: state.bestSellerBooks.length,
@@ -298,13 +294,8 @@ class _HomeBodyState extends State<HomeBody> with AutomaticKeepAliveClientMixin 
                       itemBuilder: (_, index) => Container(
                         margin: const EdgeInsets.only(right: 10),
                         child: BookComponent(
-                          bookName: state.newArrivalsBooks[index].name,
-                          bookCategory: state.newArrivalsBooks[index].category,
-                          discount: state.newArrivalsBooks[index].discount,
-                          imageUrl: state.newArrivalsBooks[index].image,
-                          price: state.newArrivalsBooks[index].price,
-                          priceAfterDiscount:
-                              state.newArrivalsBooks[index].priceAfterDiscount,
+                          book: state.newArrivalsBooks[index]
+                              .toJson(state.newArrivalsBooks[index]),
                         ),
                       ),
                       itemCount: state.newArrivalsBooks.length,
@@ -329,7 +320,7 @@ class _HomeBodyState extends State<HomeBody> with AutomaticKeepAliveClientMixin 
       ),
     );
   }
-  
+
   @override
   bool get wantKeepAlive => true;
 }

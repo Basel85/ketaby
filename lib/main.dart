@@ -6,7 +6,9 @@ import 'package:ketaby/core/cubits/auth/auth_cubit.dart';
 import 'package:ketaby/core/cubits/password_visibility/password_visibility_cubit.dart';
 import 'package:ketaby/core/helpers/cache_helper.dart';
 import 'package:ketaby/core/observer.dart';
+import 'package:ketaby/features/book_details/presentation/book_details_screen.dart';
 import 'package:ketaby/features/books/presentation/cubits/get_all_books/get_all_books_cubit.dart';
+import 'package:ketaby/features/books/presentation/cubits/search_books/search_books_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/bottom_navigation_bar/bottom_navigation_bar_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/get_best_seller/get_best_seller_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/get_categories/get_categories_cubit.dart';
@@ -46,9 +48,12 @@ class MyApp extends StatelessWidget {
             create: (context) => GetBestSellerCubit()),
         BlocProvider<GetNewArrivalsCubit>(
             create: (context) => GetNewArrivalsCubit()),
-        BlocProvider<GetCategoriesCubit>(create: (context) => GetCategoriesCubit()),
-        BlocProvider<BottomNavigationBarCubit>(create: (context) => BottomNavigationBarCubit()),
-        BlocProvider<GetAllBooksCubit>(create: (context) => GetAllBooksCubit())
+        BlocProvider<GetCategoriesCubit>(
+            create: (context) => GetCategoriesCubit()),
+        BlocProvider<BottomNavigationBarCubit>(
+            create: (context) => BottomNavigationBarCubit()),
+        BlocProvider<GetAllBooksCubit>(create: (context) => GetAllBooksCubit()),
+        BlocProvider<SearchBooksCubit>(create: (context) => SearchBooksCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -66,6 +71,7 @@ class MyApp extends StatelessWidget {
           HomeScreen.id: (_) => HomeScreen(
                 user: _user,
               ),
+          BookDetailsScreen.id: (_) => const BookDetailsScreen(),
         },
       ),
     );

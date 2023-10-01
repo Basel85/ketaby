@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ketaby/core/widgets/get_error_message.dart';
-import 'package:ketaby/features/books/presentation/cubits/get_all_books/get_all_books_cubit.dart';
-import 'package:ketaby/features/books/presentation/cubits/get_all_books/get_all_books_states.dart';
+import 'package:ketaby/features/books/presentation/cubits/search_books/search_books_cubit.dart';
+import 'package:ketaby/features/books/presentation/cubits/search_books/search_books_states.dart';
 import 'package:ketaby/features/books/presentation/views/widgets/book_component_books_tap.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -17,7 +17,7 @@ class _BooksBodyState extends State<BooksBody> {
   final TextEditingController _searchController = TextEditingController();
   @override
   void initState() {
-    GetAllBooksCubit.get(context).getAllBooks();
+    SearchBooksCubit.get(context).searchBooks(name: _searchController.text);
     super.initState();
   }
 
@@ -30,6 +30,10 @@ class _BooksBodyState extends State<BooksBody> {
         children: [
           SearchBar(
             controller: _searchController,
+            onChanged: (_) {
+              SearchBooksCubit.get(context)
+                  .searchBooks(name: _searchController.text);
+            },
             shape: MaterialStateProperty.all(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15))),
             hintText: "Search",
@@ -48,28 +52,28 @@ class _BooksBodyState extends State<BooksBody> {
             height: 8,
           ),
           Expanded(
-            child: BlocBuilder<GetAllBooksCubit, GetAllBooksStates>(
+            child: BlocBuilder<SearchBooksCubit, SearchBooksStates>(
               builder: (context, state) {
-                if (state is GetAllBooksSuccessState) {
-                  return RefreshIndicator(
-                    onRefresh: () async {
-                      GetAllBooksCubit.get(context).getAllBooks();
-                    },
-                    child: ListView.separated(
-                        itemBuilder: (context, index) => BookComponentBooksTap(
-                              book:
-                                  state.books[index].toJson(state.books[index]),
-                            ),
-                        separatorBuilder: (context, index) => const SizedBox(
-                              height: 10,
-                            ),
-                        itemCount: state.books.length),
-                  );
-                } else if (state is GetAllBooksErrorState) {
+                if (state is SearchBooksSuccessState) {
+                  if (state.books.isEmpty) {
+                    return const Center(
+                      child: Text("No Books Found"),
+                    );
+                  }
+                  return ListView.separated(
+                      itemBuilder: (context, index) => BookComponentBooksTap(
+                            book:
+                                state.books[index].toJson(state.books[index]),
+                          ),
+                      separatorBuilder: (context, index) => const SizedBox(
+                            height: 10,
+                          ),
+                      itemCount: state.books.length);
+                } else if (state is SearchBooksErrorState) {
                   return GetErrorMessage(
                       errorMessage: state.errorMessage,
-                      onPressed: () =>
-                          GetAllBooksCubit.get(context).getAllBooks());
+                      onPressed: () => SearchBooksCubit.get(context)
+                          .searchBooks(name: _searchController.text));
                 } else {
                   return Shimmer.fromColors(
                     baseColor: Colors.black12,

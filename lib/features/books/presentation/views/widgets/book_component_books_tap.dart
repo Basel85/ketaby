@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ketaby/core/widgets/api_image.dart';
+import 'package:ketaby/features/book_details/presentation/book_details_screen.dart';
 
 class BookComponentBooksTap extends StatelessWidget {
   final Map<String, dynamic> book;
@@ -12,7 +13,7 @@ class BookComponentBooksTap extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.pushNamed(context, '/bookDetails', arguments: user);
+        Navigator.pushNamed(context, BookDetailsScreen.id, arguments: book);
       },
       child: Stack(
         children: [
@@ -26,7 +27,26 @@ class BookComponentBooksTap extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 10, top: 8, bottom: 8),
                   child: SizedBox(
-                      width: 100, child: ApiImage(imageUrl: book['image'])),
+                      width: 100,
+                      child: Stack(
+                        children: [
+                          ApiImage(imageUrl: book['image']),
+                          Positioned(
+                              top: 3,
+                              left: 5,
+                              child: Container(
+                                padding: const EdgeInsets.all(1),
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: BorderRadius.circular(5)),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "${book['discount']}%",
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ))
+                        ],
+                      )),
                 ),
                 const SizedBox(
                   width: 30,

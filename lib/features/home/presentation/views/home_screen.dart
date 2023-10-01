@@ -8,6 +8,7 @@ import 'package:ketaby/features/home/presentation/cubits/get_categories/get_cate
 import 'package:ketaby/features/home/presentation/cubits/get_new_arrivals/get_new_arrivals_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/get_sliders/get_sliders_cubit.dart';
 import 'package:ketaby/features/home/presentation/views/widgets/home_body.dart';
+import 'package:ketaby/features/profile/presentation/profile_body.dart';
 
 class HomeScreen extends StatefulWidget {
   final Map<String, dynamic>? user;
@@ -48,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const BooksBody(),
             const Text("favourite"),
             const Text("cart"),
-            const Text("profile"),
+            ProfileBody(user: user)
           ],
         ),
       ),

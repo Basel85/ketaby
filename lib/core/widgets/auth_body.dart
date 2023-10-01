@@ -94,7 +94,8 @@ class _AuthBodyState extends State<AuthBody> {
                     if (!widget.isThisLoginScreen) ...[
                       CustomTextFormField(
                           controller: widget.nameController!,
-                          text: "Name",
+                          labelText: "Name",
+                          hintText: "Name",
                           icon: Icons.person),
                       BlocBuilder<AuthCubit, AuthStates>(
                         buildWhen: (_, current) =>
@@ -114,7 +115,8 @@ class _AuthBodyState extends State<AuthBody> {
                     ),
                     CustomTextFormField(
                         controller: widget.emailController,
-                        text: "Email",
+                        labelText: "Email",
+                        hintText: "Email",
                         icon: Icons.email),
                     BlocBuilder<AuthCubit, AuthStates>( 
                       buildWhen: (_, current) =>
@@ -135,7 +137,8 @@ class _AuthBodyState extends State<AuthBody> {
                         PasswordVisibilityStates>(
                       builder: (_, state) => CustomTextFormField(
                           controller: widget.passwordController,
-                          text: "Password",
+                          labelText: "Password",
+                          hintText: "Password",
                           obscureText: _obscureText,
                           suffixIcon: IconButton(
                             icon: _obscureText
@@ -167,7 +170,8 @@ class _AuthBodyState extends State<AuthBody> {
                     if (!widget.isThisLoginScreen) ...[
                       CustomTextFormField(
                           controller: widget.passwordConfirmController!,
-                          text: "Confirm Password",
+                          labelText: "Confirm Password",
+                          hintText: "Confirm Password",
                           obscureText: true,
                           icon: Icons.lock),
                     ],
