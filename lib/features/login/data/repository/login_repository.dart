@@ -21,13 +21,10 @@ class LoginRepository {
           errorMessage: data['message'] as String,
           errors: data['errors'] as Map<String, dynamic>);
     } else if (data['status'] == 201 || data['status'] == 200) {
-      print("aaa");
       _user = UserModel.fromJson(data['data']['user']);
       await _cacheHelper.setData(key: 'token', value: data['data']['token']);
-      print("sss");
       await _cacheHelper.setData(
           key: 'user', value: jsonEncode(data['data']['user']));
-      print("ddd");
     }
     return _user;
   }

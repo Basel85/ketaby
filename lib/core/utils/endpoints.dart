@@ -7,5 +7,9 @@ class EndPoints {
   static const String newArrivalsEndPoint = "/products-new-arrivals";
   static const String categoriesEndPoint = "/categories";
   static const String booksEndPoint = "/products";
-  static String searchBooksEndPoint({required String name}) => "/products-search?name=$name";
+  static String searchBooksEndPoint({required String name}) =>
+      "/products-search?name=$name";
+  static const String showWithList = "/wishlist";
+  static const String addToWishList = "/add-to-wishlist";
+  static const String removeFromWishList = "/remove-from-wishlist";
 }

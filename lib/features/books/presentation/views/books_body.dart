@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ketaby/core/widgets/books_vertical_list_view.dart';
 import 'package:ketaby/core/widgets/get_error_message.dart';
 import 'package:ketaby/features/books/presentation/cubits/search_books/search_books_cubit.dart';
 import 'package:ketaby/features/books/presentation/cubits/search_books/search_books_states.dart';
-import 'package:ketaby/features/books/presentation/views/widgets/book_component_books_tap.dart';
 import 'package:shimmer/shimmer.dart';
 
 class BooksBody extends StatefulWidget {
@@ -15,6 +15,7 @@ class BooksBody extends StatefulWidget {
 
 class _BooksBodyState extends State<BooksBody> {
   final TextEditingController _searchController = TextEditingController();
+  List<Map<String, dynamic>> _books = [];
   @override
   void initState() {
     SearchBooksCubit.get(context).searchBooks(name: _searchController.text);
@@ -60,15 +61,9 @@ class _BooksBodyState extends State<BooksBody> {
                       child: Text("No Books Found"),
                     );
                   }
-                  return ListView.separated(
-                      itemBuilder: (context, index) => BookComponentBooksTap(
-                            book:
-                                state.books[index].toJson(state.books[index]),
-                          ),
-                      separatorBuilder: (context, index) => const SizedBox(
-                            height: 10,
-                          ),
-                      itemCount: state.books.length);
+                  _books =
+                      state.books.map((book) => book.toJson(book)).toList();
+                  return BooksVerticalListView(books: _books,);
                 } else if (state is SearchBooksErrorState) {
                   return GetErrorMessage(
                       errorMessage: state.errorMessage,
@@ -93,9 +88,6 @@ class _BooksBodyState extends State<BooksBody> {
                       ],
                     ),
                   );
-                  // return const Center(
-                  //   child: CircularProgressIndicator.adaptive(),
-                  // );
                 }
               },
             ),
