@@ -13,4 +13,10 @@ class CartModel {
             .toList()
             .cast<CartItemModel>());
   }
+  Map<String,dynamic> toJson(){
+    return {
+      'total':total,
+      'cart_items':cartItems.map((cartItem) => cartItem.toJson(cartItemModel: cartItem)).toList()
+    };
+  }
 }

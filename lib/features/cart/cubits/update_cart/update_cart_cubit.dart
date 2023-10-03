@@ -9,7 +9,7 @@ import 'package:ketaby/features/cart/cubits/update_cart/update_cart_states.dart'
 class UpdateCartCubit extends Cubit<UpdateCartStates> {
   UpdateCartCubit() : super(UpdateCartInitialState());
   static UpdateCartCubit get(context) => BlocProvider.of(context);
-  void updateCart(Map<String,dynamic> body) async{
+  void updateCart({required Map<String,dynamic> body}) async{
     try {
       emit(UpdateCartLoadingState());
       await CartRepository.updateCart(body: body);

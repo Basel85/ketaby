@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ketaby/core/utils/snack_bar_viewer.dart';
 import 'package:ketaby/core/widgets/api_image.dart';
 import 'package:ketaby/features/books/presentation/cubits/add_or_remove_cart/add_or_remove_cart_cubit.dart';
+import 'package:ketaby/features/books/presentation/cubits/add_or_remove_cart/add_or_remove_cart_states.dart';
+import 'package:ketaby/features/cart/cubits/counter/counter_cubit.dart';
+import 'package:ketaby/features/cart/cubits/counter/counter_states.dart';
+import 'package:ketaby/features/cart/cubits/show_cart/show_cart_cubit.dart';
 import 'package:ketaby/features/cart/cubits/update_cart/update_cart_cubit.dart';
 
 class NonHomeBookComponentWithDeleteIcon extends StatefulWidget {
@@ -13,11 +19,16 @@ class NonHomeBookComponentWithDeleteIcon extends StatefulWidget {
 }
 
 class _NonHomeBookComponentWithDeleteIconState
-    extends State<NonHomeBookComponentWithDeleteIcon> {
+    extends State<NonHomeBookComponentWithDeleteIcon> with SnackBarViewer {
   int _quantity = 0;
+  Map<String, dynamic> _updateCartbody = {};
   @override
   void initState() {
     _quantity = int.parse(widget.cartItem['item_quantity'].toString());
+    _updateCartbody = {
+      'cart_item_id': widget.cartItem['item_id'].toString(),
+      'quantity': (_quantity).toString()
+    };
     super.initState();
   }
 
@@ -44,25 +55,48 @@ class _NonHomeBookComponentWithDeleteIconState
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      widget.cartItem['item_product_name'].toString(),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                          fontSize: 18),
+                    Expanded(
+                      child: Text(
+                        widget.cartItem['item_product_name'].toString(),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                            fontSize: 18),
+                      ),
                     ),
-                    IconButton(
-                        onPressed: () {
-                          AddOrRemoveCartCubit.get(context).removeFromCart(
-                              body: {
-                                'cart_item_id':
-                                    widget.cartItem['item_id'].toString()
-                              });
-                        },
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                        ))
+                    BlocConsumer<AddOrRemoveCartCubit, AddOrRemoveCartStates>(
+                      listener: (context, state) {
+                        if (state is AddOrRemoveCartSuccessState) {
+                          showSnackBar(
+                              context: context,
+                              message: state.successMessage,
+                              backgroundColor: Colors.green);
+                          ShowCartCubit.get(context).showCart();
+                        } else if (state is AddOrRemoveCartErrorState) {
+                          showSnackBar(
+                              context: context,
+                              message: state.errorMessage,
+                              backgroundColor: Colors.red);
+                        }
+                      },
+                      builder: (_, state) =>
+                          state is AddOrRemoveCartLoadingState
+                              ? const CircularProgressIndicator.adaptive()
+                              : IconButton(
+                                  onPressed: () {
+                                    AddOrRemoveCartCubit.get(context)
+                                        .removeFromCart(body: {
+                                      'cart_item_id':
+                                          widget.cartItem['item_id'].toString()
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  )),
+                    )
                   ],
                 ),
                 Row(
@@ -76,22 +110,35 @@ class _NonHomeBookComponentWithDeleteIconState
                         children: [
                           IconButton(
                               onPressed: () {
-                                UpdateCartCubit.get(context).updateCart({
-                                  'cart_item_id':
-                                      widget.cartItem['item_id'].toString(),
-                                  'quantity': (_quantity + 1).toString()
-                                });
+                                _quantity++;
+                                CounterCubit.get(context).changeValue();
+                                _updateCartbody['quantity'] =
+                                    (_quantity).toString();
+
+                                UpdateCartCubit.get(context)
+                                    .updateCart(body: _updateCartbody);
                               },
                               icon: const Icon(
                                 Icons.add,
                                 color: Colors.black,
                               )),
-                          Text(
-                            "$_quantity",
-                            style: const TextStyle(color: Colors.black),
+                          BlocBuilder<CounterCubit, CounterStates>(
+                            builder: (_, __) => Text(
+                              "$_quantity",
+                              style: const TextStyle(color: Colors.black),
+                            ),
                           ),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                if (_quantity > 1) {
+                                  _quantity--;
+                                  CounterCubit.get(context).changeValue();
+                                  _updateCartbody['quantity'] =
+                                      (_quantity).toString();
+                                  UpdateCartCubit.get(context)
+                                      .updateCart(body: _updateCartbody);
+                                }
+                              },
                               icon: const Icon(
                                 Icons.remove,
                                 color: Colors.grey,

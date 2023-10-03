@@ -11,6 +11,7 @@ import 'package:ketaby/features/books/presentation/cubits/get_all_books/get_all_
 import 'package:ketaby/features/books/presentation/cubits/search_books/search_books_cubit.dart';
 import 'package:ketaby/features/cart/cubits/show_cart/show_cart_cubit.dart';
 import 'package:ketaby/features/cart/cubits/update_cart/update_cart_cubit.dart';
+import 'package:ketaby/features/checkout/presentation/checkout_screen.dart';
 import 'package:ketaby/features/home/presentation/cubits/bottom_navigation_bar/bottom_navigation_bar_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/get_best_seller/get_best_seller_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/get_categories/get_categories_cubit.dart';
@@ -76,6 +77,7 @@ class MyApp extends StatelessWidget {
                 user: _user,
               ),
           BookDetailsScreen.id: (_) => const BookDetailsScreen(),
+          CheckoutScreen.id:(_) => const CheckoutScreen()
         },
       ),
     );

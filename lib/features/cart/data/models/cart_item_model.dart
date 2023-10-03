@@ -34,7 +34,7 @@ class CartItemModel {
                 .toStringAsFixed(2),
         itemProductStock: json['item_product_stock'],
         itemQuantity: json['item_quantity'],
-        itemTotal: json['item_total']);
+        itemTotal: json['item_total'].toDouble());
   }
   Map<String, dynamic> toJson({required CartItemModel cartItemModel}) {
     return {

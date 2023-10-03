@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ketaby/core/utils/snack_bar_viewer.dart';
 import 'package:ketaby/core/widgets/custom_button.dart';
 import 'package:ketaby/core/widgets/get_error_message.dart';
 import 'package:ketaby/features/books/presentation/cubits/add_or_remove_cart/add_or_remove_cart_cubit.dart';
 import 'package:ketaby/features/cart/cubits/counter/counter_cubit.dart';
 import 'package:ketaby/features/cart/cubits/show_cart/show_cart_cubit.dart';
 import 'package:ketaby/features/cart/cubits/show_cart/show_cart_states.dart';
+import 'package:ketaby/features/cart/cubits/update_cart/update_cart_cubit.dart';
+import 'package:ketaby/features/cart/cubits/update_cart/update_cart_states.dart';
 import 'package:ketaby/features/cart/presentation/widgets/non_home_book_component_with_delete_icon.dart';
+import 'package:ketaby/features/checkout/presentation/checkout_screen.dart';
 
 class CartBody extends StatefulWidget {
   const CartBody({super.key});
@@ -15,7 +19,7 @@ class CartBody extends StatefulWidget {
   State<CartBody> createState() => _CartBodyState();
 }
 
-class _CartBodyState extends State<CartBody> {
+class _CartBodyState extends State<CartBody> with SnackBarViewer {
   @override
   void initState() {
     ShowCartCubit.get(context).showCart();
@@ -30,9 +34,11 @@ class _CartBodyState extends State<CartBody> {
       builder: (context, state) {
         if (state is ShowCartSuccessState) {
           if (state.cart.cartItems.isEmpty) {
-            return const Center(
-              child: Text("No items in your cart"),
-            );
+            return GetErrorMessage(
+                errorMessage: "No Items in the cart",
+                onPressed: () {
+                  ShowCartCubit.get(context).showCart();
+                });
           }
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -64,14 +70,40 @@ class _CartBodyState extends State<CartBody> {
                         "total price: ${state.cart.total} L.E",
                         style: const TextStyle(color: Colors.white),
                       ),
-                      ElevatedButton(
-                          onPressed: () {},
-                          child: Text(
-                            "Checkout",
-                            style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontWeight: FontWeight.bold),
-                          ))
+                      BlocConsumer<UpdateCartCubit, UpdateCartStates>(
+                        listener: (context, updateCartState) {
+                          if (updateCartState is UpdateCartSuccessState) {
+                            showSnackBar(
+                                context: context,
+                                message: updateCartState.successMessage,
+                                backgroundColor: Colors.green);
+                            ShowCartCubit.get(context).showCart();
+                          } else if (updateCartState is UpdateCartErrorState) {
+                            showSnackBar(
+                                context: context,
+                                message: updateCartState.errorMessage,
+                                backgroundColor: Colors.red);
+                          }
+                        },
+                        listenWhen: (previous, current) =>
+                            current is UpdateCartSuccessState ||
+                            current is UpdateCartErrorState,
+                        builder: (_, updateCartState) =>
+                            updateCartState is UpdateCartLoadingState
+                                ? const CircularProgressIndicator.adaptive()
+                                : ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                          context, CheckoutScreen.id,
+                                          arguments: state.cart.toJson());
+                                    },
+                                    child: Text(
+                                      "Checkout",
+                                      style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                      )
                     ],
                   ),
                 )

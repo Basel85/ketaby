@@ -9,8 +9,9 @@ import 'package:ketaby/features/books/presentation/cubits/add_or_remove_favorite
 class NonHomeBookComponentWithFavoriteAndCartIcons extends StatefulWidget {
   final Map<String, dynamic> book;
   final bool isFavorite;
+  final bool isAddedToCart;
   const NonHomeBookComponentWithFavoriteAndCartIcons(
-      {super.key, required this.book, this.isFavorite = false});
+      {super.key, required this.book, this.isFavorite = false,this.isAddedToCart = false});
 
   @override
   State<NonHomeBookComponentWithFavoriteAndCartIcons> createState() =>
@@ -83,8 +84,7 @@ class _NonHomeBookComponentWithFavoriteAndCartIconsState
                         Text(
                           widget.book['name'],
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
+                              fontWeight: FontWeight.bold, color: Colors.black),
                         ),
                         const SizedBox(height: 5),
                         Text(
@@ -101,8 +101,8 @@ class _NonHomeBookComponentWithFavoriteAndCartIconsState
                         ),
                         Text(
                           "${widget.book['price_after_discount']} L.E",
-                          style: TextStyle(
-                              color: Theme.of(context).primaryColor),
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
                         ),
                       ],
                     ),
