@@ -17,7 +17,7 @@ class AuthCubit extends Cubit<AuthStates> {
       final user =
           await LoginRepository.login(email: email, password: password);
       emit(AuthSuccessState(successMessage: "Login Successfully", user: user));
-    } on AuthException catch (authException) {
+    } on CustomException catch (authException) {
       emit(AuthErrorState(
           errorMessage: authException.errorMessage,
           errors: authException.errors));
@@ -42,7 +42,7 @@ class AuthCubit extends Cubit<AuthStates> {
           passwordConfirm: passwordConfirm);
       emit(AuthSuccessState(
           successMessage: "Register Successfully", user: user));
-    } on AuthException catch (authException) {
+    } on CustomException catch (authException) {
       emit(AuthErrorState(
           errorMessage: authException.errorMessage,
           errors: authException.errors));

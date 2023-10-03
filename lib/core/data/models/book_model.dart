@@ -4,12 +4,11 @@ class BookModel {
   final String description;
   final String price;
   final int discount;
-  final double priceAfterDiscount;
+  final String priceAfterDiscount;
   final int stock;
   final int bestSeller;
   final String image;
   final String category;
-
   BookModel(
       {required this.id,
       required this.name,
@@ -28,7 +27,8 @@ class BookModel {
         description: json['description'],
         price: json['price'],
         discount: json['discount'],
-        priceAfterDiscount: json['price_after_discount'].toDouble(),
+        priceAfterDiscount: (double.parse(json['price'])-
+            (double.parse(json['price']) * (json['discount'] / 100))).toStringAsFixed(2),
         stock: json['stock'],
         bestSeller: json['best_seller'],
         image: json['image'],

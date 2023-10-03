@@ -7,7 +7,6 @@ import 'package:ketaby/core/cubits/password_visibility/password_visibility_cubit
 import 'package:ketaby/core/helpers/cache_helper.dart';
 import 'package:ketaby/core/observer.dart';
 import 'package:ketaby/features/book_details/presentation/book_details_screen.dart';
-import 'package:ketaby/features/books/presentation/cubits/add_or_remove_favorite/add_or_remove_favorite_cubit.dart';
 import 'package:ketaby/features/books/presentation/cubits/get_all_books/get_all_books_cubit.dart';
 import 'package:ketaby/features/books/presentation/cubits/search_books/search_books_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/bottom_navigation_bar/bottom_navigation_bar_cubit.dart';
@@ -55,7 +54,6 @@ class MyApp extends StatelessWidget {
             create: (context) => BottomNavigationBarCubit()),
         BlocProvider<GetAllBooksCubit>(create: (context) => GetAllBooksCubit()),
         BlocProvider<SearchBooksCubit>(create: (context) => SearchBooksCubit()),
-        BlocProvider<AddOrRemoveFavoriteCubit>(create: (context) => AddOrRemoveFavoriteCubit())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

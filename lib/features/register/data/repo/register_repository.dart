@@ -21,7 +21,7 @@ class RegisterRepository {
           'password_confirmation': passwordConfirm
         });
     if (data['status'] == 442) {
-      throw AuthException(
+      throw CustomException(
           errorMessage: data['message'] as String,
           errors: data['errors'] as Map<String, dynamic>);
     } else if (data['status'] == 201 || data['status'] == 200) {

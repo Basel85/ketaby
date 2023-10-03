@@ -1,5 +1,5 @@
-class AuthException implements Exception {
+class CustomException implements Exception {
   final String errorMessage;
   final Map<String, dynamic> errors;
-  AuthException({required this.errorMessage,required this.errors});
+  CustomException({this.errorMessage = "", this.errors = const {}});
 }

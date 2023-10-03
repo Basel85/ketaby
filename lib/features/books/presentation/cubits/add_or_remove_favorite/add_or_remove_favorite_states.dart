@@ -1,3 +1,4 @@
+
 abstract class AddOrRemoveFavoriteStates {}
 
 class AddOrRemoveFavoriteInitialState extends AddOrRemoveFavoriteStates {}
@@ -14,3 +15,5 @@ class AddOrRemoveFavoriteErrorState extends AddOrRemoveFavoriteStates {
   final String errorMessage;
   AddOrRemoveFavoriteErrorState({required this.errorMessage});
 }
+
+

@@ -16,6 +16,7 @@ class BooksBody extends StatefulWidget {
 class _BooksBodyState extends State<BooksBody> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> _books = [];
+  List<Map<String, dynamic>> _favoriteBooks = [];
   @override
   void initState() {
     SearchBooksCubit.get(context).searchBooks(name: _searchController.text);
@@ -63,7 +64,9 @@ class _BooksBodyState extends State<BooksBody> {
                   }
                   _books =
                       state.books.map((book) => book.toJson(book)).toList();
-                  return BooksVerticalListView(books: _books,);
+                  return BooksVerticalListView(
+                    books: _books,
+                  );
                 } else if (state is SearchBooksErrorState) {
                   return GetErrorMessage(
                       errorMessage: state.errorMessage,
