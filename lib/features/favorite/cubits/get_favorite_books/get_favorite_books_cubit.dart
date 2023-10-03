@@ -8,18 +8,18 @@ import 'package:ketaby/features/favorite/cubits/get_favorite_books/get_favorite_
 class GetFavoriteBooksCubit extends Cubit<GetFavoriteBooksStates> {
   GetFavoriteBooksCubit() : super(GetFavoriteBooksInitialState());
   static GetFavoriteBooksCubit get(context) => BlocProvider.of(context);
-  void getFavoriteBooks() async{
+  void getFavoriteBooks({required int page}) async{
     try {
       emit(GetFavoriteBooksLoadingState());
-      final favoriteBooks = await FavoriteRepository.getFavoriteBooks();
+      final favoriteBooks = await FavoriteRepository.getFavoriteBooks(page: page);
       emit(GetFavoriteBooksSuccessState(favoriteBooks: favoriteBooks));
     } on SocketException catch (_) {
       emit(GetFavoriteBooksErrorState(errorMessage: "No Internet Connection"));
     } on TimeoutException catch (_) {
       emit(
           GetFavoriteBooksErrorState(errorMessage: "Slow Internet Connection"));
-    } catch (_) {
-      emit(GetFavoriteBooksErrorState(errorMessage: "Something went wrong"));
+    } catch (e) {
+      emit(GetFavoriteBooksErrorState(errorMessage: e.toString()));
     }
   }
 }

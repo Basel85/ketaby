@@ -185,7 +185,7 @@ class _HomeBodyState extends State<HomeBody>
                         margin: const EdgeInsets.only(right: 10),
                         child: BookComponent(
                           book: state.bestSellerBooks[index]
-                              .toJson(state.bestSellerBooks[index]),
+                              .toJson(bookModel:state.bestSellerBooks[index]),
                         ),
                       ),
                       itemCount: state.bestSellerBooks.length,
@@ -295,7 +295,7 @@ class _HomeBodyState extends State<HomeBody>
                         margin: const EdgeInsets.only(right: 10),
                         child: BookComponent(
                           book: state.newArrivalsBooks[index]
-                              .toJson(state.newArrivalsBooks[index]),
+                              .toJson(bookModel: state.newArrivalsBooks[index]),
                         ),
                       ),
                       itemCount: state.newArrivalsBooks.length,

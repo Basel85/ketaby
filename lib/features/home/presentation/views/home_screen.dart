@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ketaby/features/books/presentation/views/books_body.dart';
+import 'package:ketaby/features/favorite/cubits/get_favorite_books/get_favorite_books_cubit.dart';
+import 'package:ketaby/features/favorite/presentation/favorite_body.dart';
 import 'package:ketaby/features/home/presentation/cubits/bottom_navigation_bar/bottom_navigation_bar_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/bottom_navigation_bar/bottom_navigation_bar_states.dart';
 import 'package:ketaby/features/home/presentation/cubits/get_best_seller/get_best_seller_cubit.dart';
@@ -46,8 +48,12 @@ class _HomeScreenState extends State<HomeScreen> {
             HomeBody(
               user: user,
             ),
-            const BooksBody(),
-            const Text("favourite"),
+            BlocProvider<GetFavoriteBooksCubit>(
+                create: (context) => GetFavoriteBooksCubit(),
+                child: const BooksBody()),
+            BlocProvider<GetFavoriteBooksCubit>(
+                create: (context) => GetFavoriteBooksCubit(),
+                child: const FavoriteBody()),
             const Text("cart"),
             ProfileBody(user: user)
           ],

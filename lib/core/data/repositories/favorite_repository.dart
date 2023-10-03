@@ -28,10 +28,9 @@ class FavoriteRepository {
     return await _performAddOrRemoveOperation(endPoint: EndPoints.removeFromWishList, body: body);
   }
 
-  static Future<List<BookModel>> getFavoriteBooks() async {
+  static Future<List<BookModel>> getFavoriteBooks({required int page}) async {
     _token = await _cacheHelper.getData(key: 'token');
-    _data = await Api.get(
-        url: EndPoints.baseUrl + EndPoints.showWithList, token: _token);
+    _data = await Api.get(url: EndPoints.baseUrl + EndPoints.showWithList(page: page), token: _token);
     if (_data['status'] != 200 && _data['status'] != 201) {
       throw CustomException(errorMessage: _data['message'] as String);
     }
@@ -39,7 +38,7 @@ class FavoriteRepository {
         .map((book) {
           return BookModel.fromJson(book);
         })
-        .toList
+        .toList()
         .cast<BookModel>();
   }
 }

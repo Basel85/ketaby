@@ -34,7 +34,7 @@ class BookModel {
         image: json['image'],
         category: json['category']);
   }
-  Map<String, dynamic> toJson(BookModel bookModel) {
+  Map<String, dynamic> toJson({required BookModel bookModel}) {
     return {
       "id": bookModel.id,
       "name": bookModel.name,
