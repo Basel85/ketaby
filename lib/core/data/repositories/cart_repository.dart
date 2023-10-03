@@ -27,16 +27,16 @@ class CartRepository {
     }
   }
 
-  static void addToCart({required Map<String, dynamic> body}) async {
+  static Future<void> addToCart({required Map<String, dynamic> body}) async {
     await _performPostOperations(
         endPoint: EndPoints.addToCartEndPoint, body: body);
   }
 
-  static void removeFromCart({required Map<String, dynamic> body}) async {
+  static Future<void> removeFromCart({required Map<String, dynamic> body}) async {
     await _performPostOperations(
         endPoint: EndPoints.removeFromCartEndPoint, body: body);
   }
-  static void updateCart({required Map<String, dynamic> body}) async {
+  static Future<void> updateCart({required Map<String, dynamic> body}) async {
     await _performPostOperations(
         endPoint: EndPoints.updateCartEndPoint, body: body);
   }

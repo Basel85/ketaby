@@ -142,7 +142,12 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 5),
-              child: CustomButton(text: "Add to Cart", onTap: () {}),
+              child: CustomButton(
+                  content: const Text(
+                    "Add To Cart",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {}),
             )
           ],
         ),

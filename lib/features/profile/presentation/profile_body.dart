@@ -110,7 +110,12 @@ class ProfileBody extends StatelessWidget {
                         const SizedBox(
                           height: 10,
                         ),
-                        CustomButton(text: "Edit Profile", onTap: () {})
+                        CustomButton(
+                            content: const Text(
+                              "Edit Profile",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            onTap: () {})
                       ],
                     ),
                   ),

@@ -9,6 +9,8 @@ import 'package:ketaby/core/observer.dart';
 import 'package:ketaby/features/book_details/presentation/book_details_screen.dart';
 import 'package:ketaby/features/books/presentation/cubits/get_all_books/get_all_books_cubit.dart';
 import 'package:ketaby/features/books/presentation/cubits/search_books/search_books_cubit.dart';
+import 'package:ketaby/features/cart/cubits/show_cart/show_cart_cubit.dart';
+import 'package:ketaby/features/cart/cubits/update_cart/update_cart_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/bottom_navigation_bar/bottom_navigation_bar_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/get_best_seller/get_best_seller_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/get_categories/get_categories_cubit.dart';
@@ -54,6 +56,8 @@ class MyApp extends StatelessWidget {
             create: (context) => BottomNavigationBarCubit()),
         BlocProvider<GetAllBooksCubit>(create: (context) => GetAllBooksCubit()),
         BlocProvider<SearchBooksCubit>(create: (context) => SearchBooksCubit()),
+        BlocProvider<ShowCartCubit>(create: (context) => ShowCartCubit()),
+        BlocProvider<UpdateCartCubit>(create: (context) => UpdateCartCubit())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

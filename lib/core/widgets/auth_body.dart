@@ -118,7 +118,7 @@ class _AuthBodyState extends State<AuthBody> {
                         labelText: "Email",
                         hintText: "Email",
                         icon: Icons.email),
-                    BlocBuilder<AuthCubit, AuthStates>( 
+                    BlocBuilder<AuthCubit, AuthStates>(
                       buildWhen: (_, current) =>
                           current is AuthLoadingState ||
                           (current is AuthErrorState &&
@@ -179,8 +179,15 @@ class _AuthBodyState extends State<AuthBody> {
                       height: 20,
                     ),
                     CustomButton(
-                        text: widget.isThisLoginScreen ? "Login" : "Register",
-                        mustBeBold: widget.isThisLoginScreen,
+                        content: Text(
+                          widget.isThisLoginScreen ? "Login" : "Register",
+                          style: TextStyle(
+                              fontWeight: widget.isThisLoginScreen
+                                  ? FontWeight.bold
+                                  : FontWeight.w300,
+                              color: Colors.white,
+                              fontSize: 18),
+                        ),
                         onTap: () {
                           widget.isThisLoginScreen
                               ? AuthCubit.get(context).login(
