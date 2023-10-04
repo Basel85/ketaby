@@ -11,6 +11,7 @@ import 'package:ketaby/features/home/presentation/cubits/get_categories/get_cate
 import 'package:ketaby/features/home/presentation/cubits/get_new_arrivals/get_new_arrivals_cubit.dart';
 import 'package:ketaby/features/home/presentation/cubits/get_sliders/get_sliders_cubit.dart';
 import 'package:ketaby/features/home/presentation/views/widgets/home_body.dart';
+import 'package:ketaby/features/profile/cubits/read_only_text_form_fields/read_only_text_form_fields_cubit.dart';
 import 'package:ketaby/features/profile/presentation/profile_body.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,15 +24,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Map<String, dynamic> user;
+  Map<String, dynamic> _user = {};
   int _currentIndex = 0;
   @override
   initState() {
     super.initState();
     try {
-      user = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      print("Hello");
+      _user =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+      print("Bye");
     } catch (_) {
-      user = widget.user!;
+      print("FSSSS");
+      _user = widget.user!;
     }
     GetSlidersCubit.get(context).getSliders();
     GetBestSellerCubit.get(context).getBestSeller();
@@ -46,8 +52,127 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (_, __) => IndexedStack(
           index: _currentIndex,
           children: [
-            HomeBody(
-              user: user,
+            Scaffold(
+              appBar: AppBar(
+                toolbarHeight: 100,
+                elevation: 0,
+                title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Hi, ${_user['name']}",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const Text(
+                        "What are you reading today?",
+                        style: TextStyle(color: Colors.grey, fontSize: 15),
+                      )
+                    ]),
+                actions: [
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundImage: NetworkImage(_user['image']),
+                  ),
+                  const SizedBox(
+                    width: 18,
+                  ),
+                ],
+              ),
+              drawer: Drawer(
+                child: Column(
+                  children: [
+                    UserAccountsDrawerHeader(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      accountName: Text(
+                        _user['name'],
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      accountEmail: Text(
+                        _user['email'],
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w300),
+                      ),
+                      currentAccountPicture: CircleAvatar(
+                        radius: 25,
+                        backgroundImage: NetworkImage(_user['image']),
+                      ),
+                    ),
+                    Expanded(
+                        child: ListView(
+                      children: [
+                        const ListTile(
+                          leading: Icon(
+                            Icons.history_edu,
+                            color: Colors.grey,
+                          ),
+                          title: Text(
+                            "Order History",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        const Divider(
+                          color: Colors.grey,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _currentIndex = 4;
+                            BottomNavigationBarCubit.get(context).update();
+                          },
+                          child: const ListTile(
+                            leading: Icon(
+                              Icons.edit,
+                              color: Colors.grey,
+                            ),
+                            title: Text(
+                              "Edit Profile",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        const Divider(
+                          color: Colors.grey,
+                        ),
+                        const ListTile(
+                          leading: Icon(
+                            Icons.change_circle,
+                            color: Colors.grey,
+                          ),
+                          title: Text(
+                            "Change Password",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        const Divider(
+                          color: Colors.grey,
+                        ),
+                        const ListTile(
+                          leading: Icon(
+                            Icons.logout,
+                            color: Colors.red,
+                          ),
+                          title: Text(
+                            "Logout",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ))
+                  ],
+                ),
+              ),
+              body: HomeBody(
+                user: _user,
+              ),
             ),
             BlocProvider<GetFavoriteBooksCubit>(
                 create: (context) => GetFavoriteBooksCubit(),
@@ -56,7 +181,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 create: (context) => GetFavoriteBooksCubit(),
                 child: const FavoriteBody()),
             const CartBody(),
-            ProfileBody(user: user)
+            BlocProvider<ReadOnlyTextFormFieldsCubit>(
+                create: (context) => ReadOnlyTextFormFieldsCubit(),
+                child: ProfileBody(user: _user))
           ],
         ),
       ),

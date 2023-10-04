@@ -18,28 +18,28 @@ class UserModel {
       required this.emailVerified,
       required this.image});
 
-  factory UserModel.fromJson(Map<String, dynamic> json) { 
+  factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
         id: json['id'],
         name: json['name'],
         email: json['email'],
-        address: json['address'],
-        city: json['city'],
-        phone: json['phone'],
+        address: json['address'] ?? "No Address",
+        city: json['city']?? "No City",
+        phone: json['phone']?? "No Phone",
         emailVerified: json['email_verified'],
         image: json['image']);
   }
-  
-  Map<String,dynamic> toJson({required UserModel user}) {
+
+  Map<String, dynamic> toJson() {
     return {
-      "id": user.id,
-      "name": user.name,
-      "email": user.email,
-      "address": user.address,
-      "city": user.city,
-      "phone": user.phone,
-      "email_verified": user.emailVerified,
-      "image": user.image
+      "id": id,
+      "name": name,
+      "email": email,
+      "address": address,
+      "city": city,
+      "phone": phone,
+      "email_verified": emailVerified,
+      "image": image
     };
   }
 }

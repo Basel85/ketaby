@@ -28,7 +28,7 @@ class RegisterRepository {
       _user = UserModel.fromJson(data['data']['user']);
       await _cacheHelper.setData(key: 'token', value: data['data']['token']);
       await _cacheHelper.setData(
-          key: 'user', value: _user.toJson(user: _user).toString());
+          key: 'user', value: _user.toJson().toString());
     }
     return _user;
   }

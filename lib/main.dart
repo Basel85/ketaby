@@ -19,6 +19,7 @@ import 'package:ketaby/features/home/presentation/cubits/get_new_arrivals/get_ne
 import 'package:ketaby/features/home/presentation/cubits/get_sliders/get_sliders_cubit.dart';
 import 'package:ketaby/features/home/presentation/views/home_screen.dart';
 import 'package:ketaby/features/login/presentation/views/login_screen.dart';
+import 'package:ketaby/features/profile/cubits/update_profile/update_profile_cubit.dart';
 import 'package:ketaby/features/register/presentation/views/register_screen.dart';
 
 Map<String, dynamic>? _user;
@@ -58,7 +59,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<GetAllBooksCubit>(create: (context) => GetAllBooksCubit()),
         BlocProvider<SearchBooksCubit>(create: (context) => SearchBooksCubit()),
         BlocProvider<ShowCartCubit>(create: (context) => ShowCartCubit()),
-        BlocProvider<UpdateCartCubit>(create: (context) => UpdateCartCubit())
+        BlocProvider<UpdateCartCubit>(create: (context) => UpdateCartCubit()),
+        BlocProvider<UpdateProfileCubit>(create:  (context) => UpdateProfileCubit())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -70,6 +72,7 @@ class MyApp extends StatelessWidget {
         initialRoute: _cacheHelper.getData(key: 'token') != null
             ? HomeScreen.id
             : LoginScreen.id,
+        
         routes: {
           LoginScreen.id: (_) => const LoginScreen(),
           RegisterScreen.id: (_) => const RegisterScreen(),

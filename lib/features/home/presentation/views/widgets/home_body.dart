@@ -21,118 +21,10 @@ class HomeBody extends StatefulWidget {
   State<HomeBody> createState() => _HomeBodyState();
 }
 
-class _HomeBodyState extends State<HomeBody>
-    with AutomaticKeepAliveClientMixin {
+class _HomeBodyState extends State<HomeBody> {
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 100,
-        elevation: 0,
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            "Hi, ${widget.user['name']}",
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const Text(
-            "What are you reading today?",
-            style: TextStyle(color: Colors.grey, fontSize: 15),
-          )
-        ]),
-        actions: [
-          CircleAvatar(
-            radius: 25,
-            backgroundImage: NetworkImage(widget.user['image']),
-          ),
-          const SizedBox(
-            width: 18,
-          ),
-        ],
-      ),
-      drawer: Drawer(
-        child: Column(
-          children: [
-            UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-              ),
-              accountName: Text(
-                widget.user['name'],
-                style: const TextStyle(color: Colors.white),
-              ),
-              accountEmail: Text(
-                widget.user['email'],
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.w300),
-              ),
-              currentAccountPicture: CircleAvatar(
-                radius: 25,
-                backgroundImage: NetworkImage(widget.user['image']),
-              ),
-            ),
-            Expanded(
-                child: ListView(
-              children: const [
-                ListTile(
-                  leading: Icon(
-                    Icons.history_edu,
-                    color: Colors.grey,
-                  ),
-                  title: Text(
-                    "Order History",
-                    style: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.edit,
-                    color: Colors.grey,
-                  ),
-                  title: Text(
-                    "Edit Profile",
-                    style: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.change_circle,
-                    color: Colors.grey,
-                  ),
-                  title: Text(
-                    "Change Password",
-                    style: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.logout,
-                    color: Colors.red,
-                  ),
-                  title: Text(
-                    "Logout",
-                    style: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ))
-          ],
-        ),
-      ),
-      body: ListView(
+    return ListView(
         children: [
           BlocBuilder<GetSlidersCubit, GetSlidersStates>(builder: (_, state) {
             if (state is GetSlidersSuccessState) {
@@ -185,7 +77,7 @@ class _HomeBodyState extends State<HomeBody>
                         margin: const EdgeInsets.only(right: 10),
                         child: BookComponent(
                           book: state.bestSellerBooks[index]
-                              .toJson(bookModel:state.bestSellerBooks[index]),
+                              .toJson(bookModel: state.bestSellerBooks[index]),
                         ),
                       ),
                       itemCount: state.bestSellerBooks.length,
@@ -317,10 +209,6 @@ class _HomeBodyState extends State<HomeBody>
             ),
           ),
         ],
-      ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

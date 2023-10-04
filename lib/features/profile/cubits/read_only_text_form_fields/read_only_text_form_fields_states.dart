@@ -1,0 +1,3 @@
+abstract class ReadOnlyTextFormFieldsStates {}
+class ReadOnlyTextFormFieldsInitialState extends ReadOnlyTextFormFieldsStates {}
+class ReadOnlyTextFormFieldsChangedState extends ReadOnlyTextFormFieldsStates {}

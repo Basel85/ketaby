@@ -20,7 +20,7 @@ class RegisterScreen extends StatelessWidget with SnackBarViewer {
                 message: state.successMessage,
                 backgroundColor: Colors.green);
             Navigator.pushReplacementNamed(context, HomeScreen.id,
-                arguments: state.user.toJson(user: state.user));
+                arguments: state.user.toJson());
           } else if (state is AuthErrorState) {
             Navigator.pop(context);
             showSnackBar(

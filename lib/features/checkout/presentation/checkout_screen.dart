@@ -21,6 +21,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Scaffold(
+      body: Padding(
+        padding: EdgeInsets.only(top: 50, left: 20, right: 20,bottom: 20),
+        child: Column(
+          
+        ),
+      ),
+    );
   }
 }

@@ -24,7 +24,7 @@ class LoginRepository {
       _user = UserModel.fromJson(data['data']['user']);
       await _cacheHelper.setData(key: 'token', value: data['data']['token']);
       await _cacheHelper.setData(
-          key: 'user', value: jsonEncode(data['data']['user']));
+          key: 'user', value: jsonEncode(_user.toJson()));
     }
     return _user;
   }
