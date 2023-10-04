@@ -17,21 +17,27 @@ class ProfileBody extends StatefulWidget {
   State<ProfileBody> createState() => _ProfileBodyState();
 }
 
-class _ProfileBodyState extends State<ProfileBody> with SnackBarViewer {
+class _ProfileBodyState extends State<ProfileBody>
+    with SnackBarViewer, AutomaticKeepAliveClientMixin {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final String _image = "";
-  String getErrorMessage(
-      {required UpdateProfileStates state, required String key}) {
-    return state is UpdateProfileErrorState &&
-            state.errors != null &&
-            state.errors!.containsKey(key)
-        ? state.errors![key][0].toString()
-        : "";
-  }
+  BlocBuilder<UpdateProfileCubit,
+                                      UpdateProfileStates>(
+                                  buildWhen: (previous, current) =>
+                                      current is UpdateProfileErrorState,
+                                  builder: (_, state) => Text(
+                                        _getErrorMessage(
+                                            state: state, key: 'address'),
+                                        style:
+                                            const TextStyle(color: Colors.red),
+                                      )),
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -54,6 +60,7 @@ class _ProfileBodyState extends State<ProfileBody> with SnackBarViewer {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     MediaQueryData mediaQueryData = MediaQuery.of(context);
     return BlocListener<UpdateProfileCubit, UpdateProfileStates>(
       listener: (context, state) {
@@ -125,7 +132,7 @@ class _ProfileBodyState extends State<ProfileBody> with SnackBarViewer {
                       buildWhen: (previous, current) =>
                           current is UpdateProfileErrorState,
                       builder: (_, state) => Text(
-                            getErrorMessage(state: state, key: 'image'),
+                            _getErrorMessage(state: state, key: 'image'),
                             style: const TextStyle(color: Colors.red),
                           )),
                   const SizedBox(
@@ -160,7 +167,7 @@ class _ProfileBodyState extends State<ProfileBody> with SnackBarViewer {
                                   buildWhen: (previous, current) =>
                                       current is UpdateProfileErrorState,
                                   builder: (_, state) => Text(
-                                        getErrorMessage(
+                                        _getErrorMessage(
                                             state: state, key: 'name'),
                                         style:
                                             const TextStyle(color: Colors.red),
@@ -196,7 +203,7 @@ class _ProfileBodyState extends State<ProfileBody> with SnackBarViewer {
                                   buildWhen: (previous, current) =>
                                       current is UpdateProfileErrorState,
                                   builder: (_, state) => Text(
-                                        getErrorMessage(
+                                        _getErrorMessage(
                                             state: state, key: 'phone'),
                                         style:
                                             const TextStyle(color: Colors.red),
@@ -222,7 +229,7 @@ class _ProfileBodyState extends State<ProfileBody> with SnackBarViewer {
                                   buildWhen: (previous, current) =>
                                       current is UpdateProfileErrorState,
                                   builder: (_, state) => Text(
-                                        getErrorMessage(
+                                        _getErrorMessage(
                                             state: state, key: 'city'),
                                         style:
                                             const TextStyle(color: Colors.red),
@@ -248,7 +255,7 @@ class _ProfileBodyState extends State<ProfileBody> with SnackBarViewer {
                                   buildWhen: (previous, current) =>
                                       current is UpdateProfileErrorState,
                                   builder: (_, state) => Text(
-                                        getErrorMessage(
+                                        _getErrorMessage(
                                             state: state, key: 'address'),
                                         style:
                                             const TextStyle(color: Colors.red),

@@ -17,4 +17,6 @@ class EndPoints {
   static const String updateCartEndPoint = "/update-cart";
   static const String removeFromCartEndPoint = "/remove-from-cart";
   static const String updateProfileEndPoint = "/update-profile";
+  static const String governoratesEndPoint = "/governorates";
+  static const String placeOrderEndPoint = "/place-order";
 }

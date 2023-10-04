@@ -24,9 +24,6 @@ class _FavoriteBodyState extends State<FavoriteBody> {
   late MediaQueryData _mediaQueryData;
   @override
   void initState() {
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-
-    // });
     GetFavoriteBooksCubit.get(context).getFavoriteBooks(page: _nextPage);
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==

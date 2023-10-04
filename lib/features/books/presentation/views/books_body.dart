@@ -16,12 +16,14 @@ class BooksBody extends StatefulWidget {
   State<BooksBody> createState() => _BooksBodyState();
 }
 
-class _BooksBodyState extends State<BooksBody> {
+class _BooksBodyState extends State<BooksBody>
+    with AutomaticKeepAliveClientMixin {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> _books = [];
   List<Map<String, dynamic>> _favoriteBooks = [];
   List<int> _favoriteBooksIds = [];
   int _nextPage = 1;
+
   @override
   void initState() {
     GetFavoriteBooksCubit.get(context).getFavoriteBooks(page: 1);
@@ -30,6 +32,7 @@ class _BooksBodyState extends State<BooksBody> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SafeArea(
         child: BlocListener<GetFavoriteBooksCubit, GetFavoriteBooksStates>(
       listener: (context, getFavoriteBooksState) {
@@ -60,9 +63,10 @@ class _BooksBodyState extends State<BooksBody> {
             SearchBar(
               controller: _searchController,
               onChanged: (_) {
-                  _favoriteBooks = [];
-                  _nextPage = 1;
-                GetFavoriteBooksCubit.get(context).getFavoriteBooks(page: _nextPage);
+                _favoriteBooks = [];
+                _nextPage = 1;
+                GetFavoriteBooksCubit.get(context)
+                    .getFavoriteBooks(page: _nextPage);
               },
               shape: MaterialStateProperty.all(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15))),
@@ -107,13 +111,13 @@ class _BooksBodyState extends State<BooksBody> {
                     return ListView.separated(
                       itemBuilder: (_, index) =>
                           BlocProvider<AddOrRemoveFavoriteCubit>(
-                            create: (context) => AddOrRemoveFavoriteCubit(),
-                            child: NonHomeBookComponentWithFavoriteAndCartIcons(
-                                                  book: _books[index],
-                                                  isFavorite:
+                        create: (context) => AddOrRemoveFavoriteCubit(),
+                        child: NonHomeBookComponentWithFavoriteAndCartIcons(
+                          book: _books[index],
+                          isFavorite:
                               _favoriteBooksIds.contains(_books[index]['id']),
-                                                ),
-                          ),
+                        ),
+                      ),
                       separatorBuilder: (_, __) => const SizedBox(
                         height: 10,
                       ),
@@ -152,4 +156,7 @@ class _BooksBodyState extends State<BooksBody> {
       ),
     ));
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
