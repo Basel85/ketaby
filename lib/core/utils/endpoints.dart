@@ -19,4 +19,5 @@ class EndPoints {
   static const String updateProfileEndPoint = "/update-profile";
   static const String governoratesEndPoint = "/governorates";
   static const String placeOrderEndPoint = "/place-order";
+  static const String orderHistoryEndPoint = "/order-history";
 }

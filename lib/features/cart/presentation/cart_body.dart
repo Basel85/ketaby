@@ -7,6 +7,8 @@ import 'package:ketaby/features/books/presentation/cubits/add_or_remove_cart/add
 import 'package:ketaby/features/cart/cubits/counter/counter_cubit.dart';
 import 'package:ketaby/features/cart/cubits/show_cart/show_cart_cubit.dart';
 import 'package:ketaby/features/cart/cubits/show_cart/show_cart_states.dart';
+import 'package:ketaby/features/cart/cubits/total_purchase/total_purchase_cubit.dart';
+import 'package:ketaby/features/cart/cubits/total_purchase/total_purchase_states.dart';
 import 'package:ketaby/features/cart/cubits/update_cart/update_cart_cubit.dart';
 import 'package:ketaby/features/cart/cubits/update_cart/update_cart_states.dart';
 import 'package:ketaby/features/cart/presentation/widgets/non_home_book_component_with_delete_icon.dart';
@@ -27,6 +29,7 @@ class _CartBodyState extends State<CartBody> with SnackBarViewer {
   }
 
   Map<String, dynamic> _cartItem = {};
+  double _totalPrice = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,7 @@ class _CartBodyState extends State<CartBody> with SnackBarViewer {
                   ShowCartCubit.get(context).showCart();
                 });
           }
+          _totalPrice = double.parse(state.cart.total.toString());
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -47,9 +51,7 @@ class _CartBodyState extends State<CartBody> with SnackBarViewer {
                 Expanded(
                   child: ListView.separated(
                       itemBuilder: (_, index) {
-                        _cartItem = state.cart.cartItems[index]
-                            .toJson(cartItemModel: state.cart.cartItems[index]);
-
+                        _cartItem = state.cart.cartItems[index].toJson();
                         return BlocProvider(
                           create: (context) => CounterCubit(),
                           child: BlocProvider<AddOrRemoveCartCubit>(
@@ -66,9 +68,11 @@ class _CartBodyState extends State<CartBody> with SnackBarViewer {
                   content: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "total price: ${state.cart.total} L.E",
-                        style: const TextStyle(color: Colors.white),
+                      BlocBuilder<TotalPurchaseCubit, TotalPurchaseStates>(
+                        builder: (_, __) => Text(
+                          "total price: ${_totalPrice.toStringAsFixed(2)} L.E",
+                          style: const TextStyle(color: Colors.white),
+                        ),
                       ),
                       BlocConsumer<UpdateCartCubit, UpdateCartStates>(
                         listener: (context, updateCartState) {
@@ -93,9 +97,12 @@ class _CartBodyState extends State<CartBody> with SnackBarViewer {
                                 ? const CircularProgressIndicator.adaptive()
                                 : ElevatedButton(
                                     onPressed: () {
-                                      Navigator.pushNamed(
-                                          context, CheckoutScreen.id,
-                                          arguments: state.cart.toJson());
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) => CheckoutScreen(
+                                                    cart: state.cart.toJson(),
+                                                  )));
                                     },
                                     child: Text(
                                       "Checkout",

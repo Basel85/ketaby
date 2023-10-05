@@ -8,7 +8,7 @@ class CartItemModel {
   final String itemProductPriceAfterDiscount;
   final int itemProductStock;
   final int itemQuantity;
-  final double itemTotal;
+  final String itemTotal;
 
   CartItemModel(
       {required this.itemId,
@@ -34,21 +34,21 @@ class CartItemModel {
                 .toStringAsFixed(2),
         itemProductStock: json['item_product_stock'],
         itemQuantity: json['item_quantity'],
-        itemTotal: json['item_total'].toDouble());
+        itemTotal: double.parse(json['item_total'].toString()).toStringAsFixed(2));
   }
-  Map<String, dynamic> toJson({required CartItemModel cartItemModel}) {
+  Map<String, dynamic> toJson() {
     return {
-      "item_id": cartItemModel.itemId,
-      "item_product_id": cartItemModel.itemProductId,
-      "item_product_name": cartItemModel.itemProductName,
-      "item_product_image": cartItemModel.itemProductImage,
-      "item_product_price": cartItemModel.itemProductPrice,
-      "item_product_discount": cartItemModel.itemProductDiscount,
+      "item_id": itemId,
+      "item_product_id": itemProductId,
+      "item_product_name": itemProductName,
+      "item_product_image": itemProductImage,
+      "item_product_price": itemProductPrice,
+      "item_product_discount": itemProductDiscount,
       "item_product_price_after_discount":
-          cartItemModel.itemProductPriceAfterDiscount,
-      "item_product_stock": cartItemModel.itemProductStock,
-      "item_quantity": cartItemModel.itemQuantity,
-      "item_total": cartItemModel.itemTotal
+          itemProductPriceAfterDiscount,
+      "item_product_stock": itemProductStock,
+      "item_quantity": itemQuantity,
+      "item_total": itemTotal
     };
   }
 }

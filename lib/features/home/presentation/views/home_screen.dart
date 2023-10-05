@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ketaby/features/books/presentation/views/books_body.dart';
+import 'package:ketaby/features/cart/cubits/show_cart/show_cart_cubit.dart';
 import 'package:ketaby/features/cart/presentation/cart_body.dart';
 import 'package:ketaby/features/favorite/cubits/get_favorite_books/get_favorite_books_cubit.dart';
 import 'package:ketaby/features/favorite/presentation/favorite_body.dart';
 import 'package:ketaby/core/cubits/bottom_navigation_bar/bottom_navigation_bar_cubit.dart';
 import 'package:ketaby/core/cubits/bottom_navigation_bar/bottom_navigation_bar_states.dart';
-import 'package:ketaby/features/home/presentation/cubits/get_best_seller/get_best_seller_cubit.dart';
-import 'package:ketaby/features/home/presentation/cubits/get_categories/get_categories_cubit.dart';
-import 'package:ketaby/features/home/presentation/cubits/get_new_arrivals/get_new_arrivals_cubit.dart';
-import 'package:ketaby/features/home/presentation/cubits/get_sliders/get_sliders_cubit.dart';
+import 'package:ketaby/features/home/cubits/get_best_seller/get_best_seller_cubit.dart';
+import 'package:ketaby/features/home/cubits/get_categories/get_categories_cubit.dart';
+import 'package:ketaby/features/home/cubits/get_new_arrivals/get_new_arrivals_cubit.dart';
+import 'package:ketaby/features/home/cubits/get_sliders/get_sliders_cubit.dart';
 import 'package:ketaby/features/home/presentation/views/widgets/home_body.dart';
 import 'package:ketaby/features/profile/cubits/read_only_text_form_fields/read_only_text_form_fields_cubit.dart';
 import 'package:ketaby/features/profile/presentation/profile_body.dart';
 
 class HomeScreen extends StatefulWidget {
-  final Map<String, dynamic>? user;
-  const HomeScreen({super.key, this.user});
+  final Map<String, dynamic> user;
+  const HomeScreen({super.key, required this.user});
   static const String id = "HomeScreen";
 
   @override
@@ -29,28 +30,25 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   initState() {
     super.initState();
-
-    try {
-      print("Hello");
-      _user =
-          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-
-      print("Bye");
-    } catch (_) {
-      print("FSSSS");
-      _user = widget.user!;
-    }
+    _user = widget.user;
     _pages = [
       HomeBody(
         user: _user,
       ),
-      BlocProvider<GetFavoriteBooksCubit>(
-          create: (context) => GetFavoriteBooksCubit(),
-          child: const BooksBody()),
-      BlocProvider<GetFavoriteBooksCubit>(
-          create: (context) => GetFavoriteBooksCubit(),
-          child: const FavoriteBody()),
-      const CartBody(),
+      BlocProvider<ShowCartCubit>(
+        create: (context) => ShowCartCubit(),
+        child: BlocProvider<GetFavoriteBooksCubit>(
+            create: (context) => GetFavoriteBooksCubit(),
+            child: const BooksBody()),
+      ),
+      BlocProvider(
+        create: (_) => ShowCartCubit(),
+        child: BlocProvider<GetFavoriteBooksCubit>(
+            create: (_) => GetFavoriteBooksCubit(),
+            child: const FavoriteBody()),
+      ),
+      BlocProvider<ShowCartCubit>(
+          create: (_) => ShowCartCubit(), child: const CartBody()),
       BlocProvider<ReadOnlyTextFormFieldsCubit>(
           create: (context) => ReadOnlyTextFormFieldsCubit(),
           child: ProfileBody(user: _user))

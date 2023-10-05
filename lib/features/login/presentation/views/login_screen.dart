@@ -25,8 +25,11 @@ class _LoginScreenState extends State<LoginScreen> with SnackBarViewer {
               context: context,
               message: state.successMessage,
               backgroundColor: Colors.green);
-          Navigator.pushReplacementNamed(context, HomeScreen.id,
-              arguments: state.user.toJson());
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
+            return HomeScreen(
+              user: state.user.toJson(),
+            );
+          }));
         } else if (state is AuthErrorState) {
           Navigator.pop(context);
           showSnackBar(

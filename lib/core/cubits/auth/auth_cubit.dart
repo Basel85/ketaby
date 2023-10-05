@@ -2,20 +2,21 @@ import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ketaby/core/cubits/auth/auth_states.dart';
+import 'package:ketaby/core/data/repositories/auth_repository.dart';
 import 'package:ketaby/core/utils/exceptions.dart';
-import 'package:ketaby/features/login/data/repository/login_repository.dart';
-import 'package:ketaby/features/register/data/repo/register_repository.dart';
+
 
 class AuthCubit extends Cubit<AuthStates> {
   AuthCubit() : super(AuthInitialState());
 
   static AuthCubit get(context) => BlocProvider.of(context);
+  
 
-  void login({required String email, required String password}) async {
+  void login({required Map<String,dynamic> body}) async {
     try {
       emit(AuthLoadingState());
       final user =
-          await LoginRepository.login(email: email, password: password);
+          await AuthRepository.login(body: body);
       emit(AuthSuccessState(successMessage: "Login Successfully", user: user));
     } on CustomException catch (authException) {
       emit(AuthErrorState(
@@ -29,17 +30,10 @@ class AuthCubit extends Cubit<AuthStates> {
   }
 
   void register(
-      {required String email,
-      required String password,
-      required String name,
-      required String passwordConfirm}) async {
+      {required Map<String,dynamic> body}) async {
     try {
       emit(AuthLoadingState());
-      final user = await RegisterRepository.register(
-          email: email,
-          password: password,
-          name: name,
-          passwordConfirm: passwordConfirm);
+      final user = await AuthRepository.register(body: body);
       emit(AuthSuccessState(
           successMessage: "Register Successfully", user: user));
     } on CustomException catch (authException) {

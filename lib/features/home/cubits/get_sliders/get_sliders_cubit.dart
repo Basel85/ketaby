@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ketaby/features/home/data/repositories/get_sliders_repository.dart';
-import 'package:ketaby/features/home/presentation/cubits/get_sliders/get_sliders_states.dart';
+import 'package:ketaby/features/home/cubits/get_sliders/get_sliders_states.dart';
 
 class GetSlidersCubit extends Cubit<GetSlidersStates> {
   GetSlidersCubit() : super(GetSlidersInitialState());

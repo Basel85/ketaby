@@ -5,8 +5,10 @@ import 'package:ketaby/core/cubits/auth/auth_cubit.dart';
 import 'package:ketaby/core/cubits/auth/auth_states.dart';
 import 'package:ketaby/core/cubits/password_visibility/password_visibility_cubit.dart';
 import 'package:ketaby/core/cubits/password_visibility/password_visibility_states.dart';
+import 'package:ketaby/core/utils/snack_bar_viewer.dart';
 import 'package:ketaby/core/widgets/custom_button.dart';
 import 'package:ketaby/core/widgets/custom_text_form_field.dart';
+import 'package:ketaby/features/home/presentation/views/home_screen.dart';
 import 'package:ketaby/features/login/presentation/views/login_screen.dart';
 import 'package:ketaby/features/register/presentation/views/register_screen.dart';
 
@@ -28,7 +30,7 @@ class AuthBody extends StatefulWidget {
   State<AuthBody> createState() => _AuthBodyState();
 }
 
-class _AuthBodyState extends State<AuthBody> {
+class _AuthBodyState extends State<AuthBody> with SnackBarViewer {
   bool _obscureText = true;
   @override
   void dispose() {
@@ -42,168 +44,200 @@ class _AuthBodyState extends State<AuthBody> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Text(
-                widget.isThisLoginScreen ? "Login now!" : "Join Us!",
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColor),
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: Text.rich(TextSpan(children: [
-                  TextSpan(
-                      text: widget.isThisLoginScreen
-                          ? "Don't have an account? "
-                          : "already have an account? ",
-                      style: const TextStyle(color: Colors.grey)),
-                  TextSpan(
-                    text: widget.isThisLoginScreen ? "Register Now!" : "Login",
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        Navigator.of(context).pushReplacementNamed(
-                            widget.isThisLoginScreen
-                                ? RegisterScreen.id
-                                : LoginScreen.id);
-                      },
-                  )
-                ])),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                        color: Theme.of(context).primaryColor, width: 2)),
-                child: Column(
-                  children: [
-                    if (!widget.isThisLoginScreen) ...[
+      child: BlocListener<AuthCubit, AuthStates>(
+        listener: (_, state) {
+          if (state is AuthSuccessState) {
+            showSnackBar(
+                context: context,
+                message: state.successMessage,
+                backgroundColor: Colors.green);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
+              return HomeScreen(
+                user: state.user.toJson(),
+              );
+            }));
+          } else if (state is AuthErrorState) {
+            Navigator.pop(context);
+            showSnackBar(
+                context: context,
+                message: state.errorMessage,
+                backgroundColor: Colors.red);
+          } else {
+            showDialog(
+                context: context,
+                builder: (_) => const Center(
+                      child: CircularProgressIndicator(),
+                    ));
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Text(
+                  widget.isThisLoginScreen ? "Login now!" : "Join Us!",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor),
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: Text.rich(TextSpan(children: [
+                    TextSpan(
+                        text: widget.isThisLoginScreen
+                            ? "Don't have an account? "
+                            : "already have an account? ",
+                        style: const TextStyle(color: Colors.grey)),
+                    TextSpan(
+                      text:
+                          widget.isThisLoginScreen ? "Register Now!" : "Login",
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.of(context).pushReplacementNamed(
+                              widget.isThisLoginScreen
+                                  ? RegisterScreen.id
+                                  : LoginScreen.id);
+                        },
+                    )
+                  ])),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                          color: Theme.of(context).primaryColor, width: 2)),
+                  child: Column(
+                    children: [
+                      if (!widget.isThisLoginScreen) ...[
+                        CustomTextFormField(
+                            controller: widget.nameController!,
+                            labelText: "Name",
+                            hintText: "Name",
+                            icon: Icons.person),
+                        BlocBuilder<AuthCubit, AuthStates>(
+                          buildWhen: (_, current) =>
+                              current is AuthLoadingState ||
+                              (current is AuthErrorState &&
+                                  current.errors.containsKey('name')),
+                          builder: (_, state) => Text(
+                            state is AuthErrorState
+                                ? state.errors['name']![0]
+                                : '',
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        )
+                      ],
+                      const SizedBox(
+                        height: 20,
+                      ),
                       CustomTextFormField(
-                          controller: widget.nameController!,
-                          labelText: "Name",
-                          hintText: "Name",
-                          icon: Icons.person),
+                          controller: widget.emailController,
+                          labelText: "Email",
+                          hintText: "Email",
+                          icon: Icons.email),
                       BlocBuilder<AuthCubit, AuthStates>(
                         buildWhen: (_, current) =>
                             current is AuthLoadingState ||
                             (current is AuthErrorState &&
-                                current.errors.containsKey('name')),
+                                current.errors.containsKey('email')),
                         builder: (_, state) => Text(
                           state is AuthErrorState
-                              ? state.errors['name']![0]
+                              ? state.errors['email']![0]
                               : '',
                           style: const TextStyle(color: Colors.red),
                         ),
-                      )
-                    ],
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextFormField(
-                        controller: widget.emailController,
-                        labelText: "Email",
-                        hintText: "Email",
-                        icon: Icons.email),
-                    BlocBuilder<AuthCubit, AuthStates>(
-                      buildWhen: (_, current) =>
-                          current is AuthLoadingState ||
-                          (current is AuthErrorState &&
-                              current.errors.containsKey('email')),
-                      builder: (_, state) => Text(
-                        state is AuthErrorState
-                            ? state.errors['email']![0]
-                            : '',
-                        style: const TextStyle(color: Colors.red),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    BlocBuilder<PasswordVisibilityCubit,
-                        PasswordVisibilityStates>(
-                      builder: (_, state) => CustomTextFormField(
-                          controller: widget.passwordController,
-                          labelText: "Password",
-                          hintText: "Password",
-                          obscureText: _obscureText,
-                          suffixIcon: IconButton(
-                            icon: _obscureText
-                                ? const Icon(Icons.visibility)
-                                : const Icon(Icons.visibility_off),
-                            onPressed: () {
-                              _obscureText = !_obscureText;
-                              PasswordVisibilityCubit.get(context)
-                                  .changePasswordVisibility();
-                            },
-                          ),
-                          icon: Icons.lock),
-                    ),
-                    BlocBuilder<AuthCubit, AuthStates>(
-                      buildWhen: (_, current) =>
-                          current is AuthLoadingState ||
-                          (current is AuthErrorState &&
-                              current.errors.containsKey('password')),
-                      builder: (_, state) => Text(
-                        state is AuthErrorState
-                            ? state.errors['password']![0]
-                            : '',
-                        style: const TextStyle(color: Colors.red),
+                      const SizedBox(
+                        height: 20,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    if (!widget.isThisLoginScreen) ...[
-                      CustomTextFormField(
-                          controller: widget.passwordConfirmController!,
-                          labelText: "Confirm Password",
-                          hintText: "Confirm Password",
-                          obscureText: true,
-                          icon: Icons.lock),
-                    ],
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomButton(
-                        content: Text(
-                          widget.isThisLoginScreen ? "Login" : "Register",
-                          style: TextStyle(
-                              fontWeight: widget.isThisLoginScreen
-                                  ? FontWeight.bold
-                                  : FontWeight.w300,
-                              color: Colors.white,
-                              fontSize: 18),
+                      BlocBuilder<PasswordVisibilityCubit,
+                          PasswordVisibilityStates>(
+                        builder: (_, state) => CustomTextFormField(
+                            controller: widget.passwordController,
+                            labelText: "Password",
+                            hintText: "Password",
+                            obscureText: _obscureText,
+                            suffixIcon: IconButton(
+                              icon: _obscureText
+                                  ? const Icon(Icons.visibility)
+                                  : const Icon(Icons.visibility_off),
+                              onPressed: () {
+                                _obscureText = !_obscureText;
+                                PasswordVisibilityCubit.get(context)
+                                    .changePasswordVisibility();
+                              },
+                            ),
+                            icon: Icons.lock),
+                      ),
+                      BlocBuilder<AuthCubit, AuthStates>(
+                        buildWhen: (_, current) =>
+                            current is AuthLoadingState ||
+                            (current is AuthErrorState &&
+                                current.errors.containsKey('password')),
+                        builder: (_, state) => Text(
+                          state is AuthErrorState
+                              ? state.errors['password']![0]
+                              : '',
+                          style: const TextStyle(color: Colors.red),
                         ),
-                        onTap: () {
-                          widget.isThisLoginScreen
-                              ? AuthCubit.get(context).login(
-                                  email: widget.emailController.text,
-                                  password: widget.passwordController.text)
-                              : AuthCubit.get(context).register(
-                                  email: widget.emailController.text,
-                                  password: widget.passwordController.text,
-                                  name: widget.nameController!.text,
-                                  passwordConfirm:
-                                      widget.passwordConfirmController!.text);
-                        }),
-                  ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      if (!widget.isThisLoginScreen) ...[
+                        CustomTextFormField(
+                            controller: widget.passwordConfirmController!,
+                            labelText: "Confirm Password",
+                            hintText: "Confirm Password",
+                            obscureText: true,
+                            icon: Icons.lock),
+                      ],
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomButton(
+                          content: Text(
+                            widget.isThisLoginScreen ? "Login" : "Register",
+                            style: TextStyle(
+                                fontWeight: widget.isThisLoginScreen
+                                    ? FontWeight.bold
+                                    : FontWeight.w300,
+                                color: Colors.white,
+                                fontSize: 18),
+                          ),
+                          onTap: () {
+                            widget.isThisLoginScreen
+                                ? AuthCubit.get(context).login(body: {
+                                    'email': widget.emailController.text,
+                                    'password': widget.passwordController.text
+                                  })
+                                : AuthCubit.get(context).register(body: {
+                                    'name': widget.nameController!.text,
+                                    'email': widget.emailController.text,
+                                    'password': widget.passwordController.text,
+                                    'password_confirmation':
+                                        widget.passwordConfirmController!
+                                            .text
+                                  }
+                                );
+                          }),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -11,7 +11,8 @@ import 'package:ketaby/features/checkout/cubits/place_order/place_order_cubit.da
 import 'package:ketaby/features/checkout/cubits/place_order/place_order_states.dart';
 
 class CheckoutScreen extends StatefulWidget {
-  const CheckoutScreen({super.key});
+  final Map<String, dynamic> cart;
+  const CheckoutScreen({super.key, this.cart = const {}});
   static const String id = "checkout_screen";
 
   @override
@@ -19,7 +20,6 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> with SnackBarViewer {
-  Map<String, dynamic> _cart = {};
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -37,11 +37,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> with SnackBarViewer {
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      _cart =
-          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-      GetGovernoratesCubit.get(context).getGovernorates();
-    });
+    GetGovernoratesCubit.get(context).getGovernorates();
+
     super.initState();
   }
 
@@ -65,8 +62,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> with SnackBarViewer {
               context: context,
               message: state.successMessage,
               backgroundColor: Colors.green);
-          BottomNavigationBarCubit.get(context).update(index: 0);
           Navigator.pop(context);
+          BottomNavigationBarCubit.get(context).update(index: 0);
         } else if (state is PlaceOrderErrorState) {
           Navigator.pop(context);
           showSnackBar(
@@ -84,6 +81,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> with SnackBarViewer {
       child: Column(
         children: [
           Expanded(
+            flex: 2,
             child: ListView(
               padding: const EdgeInsets.only(
                   top: kToolbarHeight + 10, left: 20, right: 20, bottom: 20),
@@ -102,9 +100,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> with SnackBarViewer {
                           _getErrorMessage(state: state, key: 'name'),
                           style: const TextStyle(color: Colors.red),
                         )),
-                const SizedBox(
-                  height: 15,
-                ),
                 CustomTextFormField(
                   icon: Icons.email,
                   labelText: "email",
@@ -119,9 +114,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> with SnackBarViewer {
                           _getErrorMessage(state: state, key: 'email'),
                           style: const TextStyle(color: Colors.red),
                         )),
-                const SizedBox(
-                  height: 15,
-                ),
                 CustomTextFormField(
                   icon: Icons.phone,
                   labelText: "phone",
@@ -136,9 +128,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> with SnackBarViewer {
                           _getErrorMessage(state: state, key: 'phone'),
                           style: const TextStyle(color: Colors.red),
                         )),
-                const SizedBox(
-                  height: 15,
-                ),
                 CustomTextFormField(
                   icon: Icons.location_on_outlined,
                   labelText: "address",
@@ -153,9 +142,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> with SnackBarViewer {
                           _getErrorMessage(state: state, key: 'address'),
                           style: const TextStyle(color: Colors.red),
                         )),
-                const SizedBox(
-                  height: 10,
-                ),
                 BlocBuilder<GetGovernoratesCubit, GetGovernoratesStates>(
                     builder: (_, state) {
                   if (state is GetGovernoratesSuccessState) {
@@ -181,7 +167,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> with SnackBarViewer {
                             fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                     );
-                    
                   } else if (state is GetGovernoratesErrorState) {
                     return GetErrorMessage(
                         errorMessage: state.errorMessage,
@@ -224,13 +209,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> with SnackBarViewer {
                             children: [
                               Expanded(
                                   child: Text(
-                                _cart['cart_items'][index]['item_product_name']
+                                widget.cart['cart_items'][index]
+                                        ['item_product_name']
                                     .toString(),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 18),
                               )),
                               Text(
-                                _cart['cart_items'][index]['item_total']
+                                widget.cart['cart_items'][index]['item_total']
                                     .toString(),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
@@ -238,14 +224,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> with SnackBarViewer {
                             ],
                           ),
                           Text(
-                            "quantity: ${_cart['cart_items'][index]['item_quantity']}",
+                            "quantity: ${widget.cart['cart_items'][index]['item_quantity']}",
                             style: const TextStyle(color: Colors.grey),
                           ),
                         ],
                       ),
-                      itemCount:
-                          (_cart['cart_items'] as List<Map<String, dynamic>>)
-                              .length,
+                      itemCount: (widget.cart['cart_items']
+                              as List<Map<String, dynamic>>)
+                          .length,
                     ),
                   ),
                   CustomButton(
@@ -253,7 +239,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> with SnackBarViewer {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "total price: ${_cart['total']}",
+                        "total price: ${widget.cart['total']}",
                         style: const TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),

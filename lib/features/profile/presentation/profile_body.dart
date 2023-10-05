@@ -25,16 +25,15 @@ class _ProfileBodyState extends State<ProfileBody>
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final String _image = "";
-  BlocBuilder<UpdateProfileCubit,
-                                      UpdateProfileStates>(
-                                  buildWhen: (previous, current) =>
-                                      current is UpdateProfileErrorState,
-                                  builder: (_, state) => Text(
-                                        _getErrorMessage(
-                                            state: state, key: 'address'),
-                                        style:
-                                            const TextStyle(color: Colors.red),
-                                      )),
+  String _getErrorMessage(
+      {required UpdateProfileStates state, required String key}) {
+    return state is UpdateProfileErrorState &&
+            state.errors != null &&
+            state.errors!.containsKey(key)
+        ? state.errors![key][0].toString()
+        : "";
+  }
+
 
   @override
   bool get wantKeepAlive => true;

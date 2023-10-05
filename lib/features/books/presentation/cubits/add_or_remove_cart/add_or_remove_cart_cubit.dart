@@ -9,7 +9,7 @@ import 'package:ketaby/features/books/presentation/cubits/add_or_remove_cart/add
 class AddOrRemoveCartCubit extends Cubit<AddOrRemoveCartStates> {
   AddOrRemoveCartCubit() : super(AddOrRemoveCartInitialState());
   static AddOrRemoveCartCubit get(context) => BlocProvider.of(context);
-  void _performAddOrRemoveCart({required bool isAddToCartOperation,required Future<void> performAddOrRemoveOperation}) async{
+  Future<void> _performAddOrRemoveCart({required bool isAddToCartOperation,required Future<void> performAddOrRemoveOperation}) async{
     try {
       emit(AddOrRemoveCartLoadingState());
       await performAddOrRemoveOperation;
@@ -27,5 +27,5 @@ class AddOrRemoveCartCubit extends Cubit<AddOrRemoveCartStates> {
     }
   }
   void addToCart({required Map<String,dynamic> body}) => _performAddOrRemoveCart(isAddToCartOperation: true,performAddOrRemoveOperation: CartRepository.addToCart(body: body));
-  void removeFromCart({required Map<String,dynamic> body}) => _performAddOrRemoveCart(isAddToCartOperation: false,performAddOrRemoveOperation: CartRepository.removeFromCart(body: body));
+  Future<void> removeFromCart({required Map<String,dynamic> body}) => _performAddOrRemoveCart(isAddToCartOperation: false,performAddOrRemoveOperation: CartRepository.removeFromCart(body: body));
 }

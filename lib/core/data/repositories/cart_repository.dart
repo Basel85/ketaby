@@ -15,13 +15,17 @@ class CartRepository {
     if (_data['status'] != 200 && _data['status'] != 201) {
       throw CustomException(errorMessage: _data['message'] as String);
     }
+    if ((_data['data']['cart_items'] as List).isEmpty) {
+      throw CustomException(errorMessage: "No Items in the cart");
+    }
     return CartModel.fromJson(_data['data']);
   }
 
   static Future<void> _performPostOperations(
       {required String endPoint, required Map<String, dynamic> body}) async {
-        _token = await _cacheHelper.getData(key: 'token');
-    await Api.post(url: EndPoints.baseUrl + endPoint, body: body,token: _token);
+    _token = await _cacheHelper.getData(key: 'token');
+    await Api.post(
+        url: EndPoints.baseUrl + endPoint, body: body, token: _token);
     if (_data['status'] != 200 && _data['status'] != 201) {
       throw CustomException(errorMessage: _data['message'] as String);
     }
@@ -32,10 +36,12 @@ class CartRepository {
         endPoint: EndPoints.addToCartEndPoint, body: body);
   }
 
-  static Future<void> removeFromCart({required Map<String, dynamic> body}) async {
+  static Future<void> removeFromCart(
+      {required Map<String, dynamic> body}) async {
     await _performPostOperations(
         endPoint: EndPoints.removeFromCartEndPoint, body: body);
   }
+
   static Future<void> updateCart({required Map<String, dynamic> body}) async {
     await _performPostOperations(
         endPoint: EndPoints.updateCartEndPoint, body: body);
