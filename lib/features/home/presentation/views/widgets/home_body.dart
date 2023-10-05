@@ -12,7 +12,9 @@ import 'package:ketaby/features/home/cubits/get_sliders/get_sliders_cubit.dart';
 import 'package:ketaby/features/home/cubits/get_sliders/get_sliders_states.dart';
 import 'package:ketaby/features/home/presentation/views/widgets/book_component.dart';
 import 'package:ketaby/features/home/presentation/views/widgets/category_component.dart';
+import 'package:ketaby/features/home/presentation/views/widgets/drawer_list_tile.dart';
 import 'package:ketaby/features/home/presentation/views/widgets/section_component.dart';
+import 'package:ketaby/features/order_history/presentation/order_history_screen.dart';
 
 class HomeBody extends StatefulWidget {
   final Map<String, dynamic> user;
@@ -78,18 +80,9 @@ class _HomeBodyState extends State<HomeBody> with AutomaticKeepAliveClientMixin 
                     Expanded(
                         child: ListView(
                       children: [
-                        const ListTile(
-                          leading: Icon(
-                            Icons.history_edu,
-                            color: Colors.grey,
-                          ),
-                          title: Text(
-                            "Order History",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
+                        DrawerListTile(icon: Icons.history_edu, title: "Order History", onTap: (){
+                          Navigator.pushNamed(context, OrderHistoryScreen.id);
+                        }),
                         const Divider(
                           color: Colors.grey,
                         ),

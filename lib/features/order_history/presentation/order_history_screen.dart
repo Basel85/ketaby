@@ -34,7 +34,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (_) {
                   return OrderDetailsScreen(
-                      orderId: state.orderHistory[index].id.toString());
+                      orderId: state.orderHistory[index].id);
                 }));
               },
               child: Column(

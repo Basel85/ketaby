@@ -20,4 +20,5 @@ class EndPoints {
   static const String governoratesEndPoint = "/governorates";
   static const String placeOrderEndPoint = "/place-order";
   static const String orderHistoryEndPoint = "/order-history";
+  static String orderDetailsEndPoint({required int orderId}) => "/order-history/$orderId";
 }

@@ -23,7 +23,8 @@ import 'package:ketaby/features/home/presentation/views/home_screen.dart';
 import 'package:ketaby/features/login/presentation/views/login_screen.dart';
 import 'package:ketaby/features/on_boarding/cubits/make_the_user_an_old_user_cubit.dart';
 import 'package:ketaby/features/on_boarding/presentation/on_boarding_screen.dart';
-import 'package:ketaby/features/order_details/presentation/order_details_screen.dart';
+import 'package:ketaby/features/order_details/cubits/order_details/order_details_cubit.dart';
+import 'package:ketaby/features/order_history/cubits/order_history/order_history_cubit.dart';
 import 'package:ketaby/features/order_history/presentation/order_history_screen.dart';
 import 'package:ketaby/features/profile/cubits/update_profile/update_profile_cubit.dart';
 import 'package:ketaby/features/register/presentation/views/register_screen.dart';
@@ -77,7 +78,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<PlaceOrderCubit>(create: (context) => PlaceOrderCubit()),
         BlocProvider<MakeTheUserAnOldUserCubit>(
             create: (context) => MakeTheUserAnOldUserCubit()),
-        BlocProvider<TotalPurchaseCubit>(create: (context) => TotalPurchaseCubit())
+        BlocProvider<TotalPurchaseCubit>(create: (context) => TotalPurchaseCubit()),
+        BlocProvider<OrderDetailsCubit>(create: (context) => OrderDetailsCubit()),
+        BlocProvider<OrderHistoryCubit>(create: (context) => OrderHistoryCubit())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
