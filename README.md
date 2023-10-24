@@ -2,17 +2,24 @@
 An E-commerce App for books
 
 ## Features
-- Authentication
+- Authentication (Register,Login,Logout)
 - Displaying the books from different categories
 - Displaying banners
+- Get all books categories
 - Displaying book details
 - Search for books
-- Add or Remove books from favorites
+- Add book to favorites
+- Remove book from favorites
+- Show favorites
 - Add or Remove books from cart
+- Update Cart
+- Show Cart
 - Checkout
 - Place Order
 - Get Order Details
-- Update User information
+- Show a single order
+- Show User Profile
+- Update User Profile
    
 ## Packages
 - http: ^1.1.0 (Making API calls)
