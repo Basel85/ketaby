@@ -15,4 +15,8 @@ An E-commerce App for books
 - Update User information
    
 ## Packages
-- 
+- http: ^1.1.0 (Making API calls)
+- flutter_bloc: ^8.1.3 (State Management)
+- flutter_secure_storage: ^9.0.0 (Storing the user token)
+- shimmer: ^3.0.0 (Used when Loading the data from the APIs)
+- flutter_screenutil: ^5.9.0 (Responsitivity)
