@@ -27,3 +27,7 @@ An E-commerce App for books
 - flutter_secure_storage: ^9.0.0 (Storing the user token)
 - shimmer: ^3.0.0 (Used when Loading the data from the APIs)
 - flutter_screenutil: ^5.9.0 (Responsitivity)
+
+
+## App Video
+https://drive.google.com/file/d/1B_NNCRJ60C7dwVxpDTBil-CeROwQ8eK6/view?usp=sharing
