@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ketaby/core/utils/snack_bar_viewer.dart';
 import 'package:ketaby/core/widgets/custom_button.dart';
 import 'package:ketaby/core/widgets/get_error_message.dart';
-import 'package:ketaby/features/books/presentation/cubits/add_or_remove_cart/add_or_remove_cart_cubit.dart';
+import 'package:ketaby/core/cubits/add_or_remove_cart/add_or_remove_cart_cubit.dart';
 import 'package:ketaby/features/cart/cubits/counter/counter_cubit.dart';
 import 'package:ketaby/features/cart/cubits/show_cart/show_cart_cubit.dart';
 import 'package:ketaby/features/cart/cubits/show_cart/show_cart_states.dart';

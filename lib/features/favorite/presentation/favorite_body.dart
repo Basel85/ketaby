@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ketaby/core/cubits/add_or_remove_cart/add_or_remove_cart_cubit.dart';
 import 'package:ketaby/core/widgets/get_error_message.dart';
 import 'package:ketaby/core/widgets/non_home_book_component_with_favorite_and_cart_icons.dart';
 import 'package:ketaby/features/books/presentation/cubits/add_or_remove_favorite/add_or_remove_favorite_cubit.dart';
@@ -58,11 +59,14 @@ class _FavoriteBodyState extends State<FavoriteBody> {
                     controller: _scrollController,
                     itemBuilder: (_, index) {
                       if (index < _favoriteBooks.length) {
-                        return BlocProvider<AddOrRemoveFavoriteCubit>(
-                          create: (context) => AddOrRemoveFavoriteCubit(),
-                          child: NonHomeBookComponentWithFavoriteAndCartIcons(
-                            book: _favoriteBooks[index],
-                            isFavorite: true,
+                        return BlocProvider<AddOrRemoveCartCubit>(
+                          create: (context) => AddOrRemoveCartCubit(),
+                          child: BlocProvider<AddOrRemoveFavoriteCubit>(
+                            create: (context) => AddOrRemoveFavoriteCubit(),
+                            child: NonHomeBookComponentWithFavoriteAndCartIcons(
+                              book: _favoriteBooks[index],
+                              isFavorite: true,
+                            ),
                           ),
                         );
                       }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ketaby/core/cubits/add_or_remove_cart/add_or_remove_cart_cubit.dart';
+import 'package:ketaby/core/cubits/add_or_remove_cart/add_or_remove_cart_states.dart';
 import 'package:ketaby/core/utils/snack_bar_viewer.dart';
 import 'package:ketaby/core/widgets/api_image.dart';
 import 'package:ketaby/features/book_details/presentation/book_details_screen.dart';
@@ -11,7 +14,10 @@ class NonHomeBookComponentWithFavoriteAndCartIcons extends StatefulWidget {
   final bool isFavorite;
   final bool isAddedToCart;
   const NonHomeBookComponentWithFavoriteAndCartIcons(
-      {super.key, required this.book, this.isFavorite = false,this.isAddedToCart = false});
+      {super.key,
+      required this.book,
+      this.isFavorite = false,
+      this.isAddedToCart = false});
 
   @override
   State<NonHomeBookComponentWithFavoriteAndCartIcons> createState() =>
@@ -21,13 +27,13 @@ class NonHomeBookComponentWithFavoriteAndCartIcons extends StatefulWidget {
 class _NonHomeBookComponentWithFavoriteAndCartIconsState
     extends State<NonHomeBookComponentWithFavoriteAndCartIcons>
     with SnackBarViewer {
-  Map<String, dynamic> favoriteBody = {};
+  Map<String, dynamic> body = {};
   late bool isFavorite;
   bool mustBeBuilt = false;
   @override
   void initState() {
     isFavorite = widget.isFavorite;
-    favoriteBody = {'product_id': widget.book['id'].toString()};
+    body = {'product_id': widget.book['id'].toString()};
     super.initState();
   }
 
@@ -147,9 +153,9 @@ class _NonHomeBookComponentWithFavoriteAndCartIconsState
                           mustBeBuilt = true;
                           isFavorite
                               ? AddOrRemoveFavoriteCubit.get(context)
-                                  .removeFromFavorite(body: favoriteBody)
+                                  .removeFromFavorite(body: body)
                               : AddOrRemoveFavoriteCubit.get(context)
-                                  .addToFavorite(body: favoriteBody);
+                                  .addToFavorite(body: body);
                         },
                         icon: Icon(
                           isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -160,14 +166,40 @@ class _NonHomeBookComponentWithFavoriteAndCartIconsState
                   }
                 }),
           ),
-          Positioned(
-            right: 0,
-            bottom: 0,
-            child: IconButton(
-              icon: const Icon(Icons.add_shopping_cart),
-              onPressed: () {},
-            ),
-          ),
+          BlocConsumer<AddOrRemoveCartCubit, AddOrRemoveCartStates>(
+              listener: (context, state) {
+                if (state is AddOrRemoveCartSuccessState) {
+                  showSnackBar(
+                      context: context,
+                      message: state.successMessage,
+                      backgroundColor: Colors.green);
+                } else if (state is AddOrRemoveCartErrorState) {
+                  showSnackBar(
+                      context: context,
+                      message: state.errorMessage,
+                      backgroundColor: Colors.red);
+                }
+              },
+              listenWhen: (previous, current) =>
+                  current is AddOrRemoveCartSuccessState ||
+                  current is AddOrRemoveCartErrorState,
+              builder: (_, state) {
+                if (state is AddOrRemoveCartLoadingState) {
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
+                }
+                return Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: IconButton(
+                    icon: const Icon(Icons.add_shopping_cart),
+                    onPressed: () {
+                      AddOrRemoveCartCubit.get(context).addToCart(body: body);
+                    },
+                  ),
+                );
+              }),
         ],
       ),
     );

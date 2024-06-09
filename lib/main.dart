@@ -56,6 +56,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<AuthCubit>(
           create: (context) => AuthCubit(),
+          child: Container(),
         ),
         BlocProvider<PasswordVisibilityCubit>(
             create: (context) => PasswordVisibilityCubit()),
@@ -89,7 +90,9 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF05A4A6)),
           useMaterial3: true,
         ),
-        initialRoute: SplashScreen.id,
+        initialRoute: _oldUser == null? OnBoardingScreen.id: _token != null
+                        ? HomeScreen.id
+                        : LoginScreen.id,
         routes: {
           LoginScreen.id: (_) => const LoginScreen(),
           RegisterScreen.id: (_) => const RegisterScreen(),

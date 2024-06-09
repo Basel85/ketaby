@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ketaby/core/data/repositories/cart_repository.dart';
 import 'package:ketaby/core/utils/exceptions.dart';
-import 'package:ketaby/features/books/presentation/cubits/add_or_remove_cart/add_or_remove_cart_states.dart';
+import 'package:ketaby/core/cubits/add_or_remove_cart/add_or_remove_cart_states.dart';
 
 class AddOrRemoveCartCubit extends Cubit<AddOrRemoveCartStates> {
   AddOrRemoveCartCubit() : super(AddOrRemoveCartInitialState());
